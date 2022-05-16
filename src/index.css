@@ -1,0 +1,425 @@
+:root {
+    --lightGray: #f3f4f9;
+    --blue: #79c2fc;
+    --seaGreen: #40c282;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Comfortaa', cursive;
+}
+
+body, html, #root {
+    height: 100%;
+}
+
+
+/* My Chats */
+
+
+#myChats {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+}
+
+#myChatsHeader {
+    display: flex;
+    height: 10%;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+#myChatsHeaderSearchBox {
+    background-color: var(--lightGray);
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myChatsSearch {
+    border: none;
+    background: none;
+    width: 80%;
+}
+
+#addContactButton {
+    background-color: var(--lightGray);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.contact {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.contactPic {
+    margin-right: 1rem;
+}
+
+.contactBody {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contactBody p{
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
+.contactBodyMsgInfo {
+    display: block;
+}
+
+
+/* Conversation */
+
+
+#conversation {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    border-left: 1px solid rgba(0, 0, 0, 0.5);
+    border-right: 1px solid rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+#conversationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10%;
+    padding: 2rem;
+}
+
+#recipientNameArea {
+    display: flex;
+    justify-content: center;
+}
+
+#recipientName {
+    margin: 0 1rem;
+}
+
+#onlineStatus {
+    background: var(--seaGreen);
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    transform: scale(0.7);
+}
+
+#typingStatus {
+    margin: 0 1rem;
+}
+
+#contactOptions {
+    display: flex;
+}
+
+.contactOption {
+    margin: 0 1rem;
+}
+
+#conversationBody {
+    height: 80%;
+}
+
+.message {
+    display: flex;
+}
+
+.messageUser {
+    justify-content: flex-end;
+}
+
+.messageBody {
+    padding: 1rem;
+    margin: 1rem 0;
+    margin-right: 3rem;
+    background-color: var(--lightGray);
+    border-radius: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.messageBodyUser {
+    padding: 1rem;
+    margin: 1rem 0;
+    margin-left: 3rem;
+    background-color: var(--blue);
+    border-radius: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.messagePic {
+    margin: 0 1rem;
+    align-self: center;
+    min-width: 1rem;
+    min-height: 1rem;
+}
+
+#conversationTypingArea {
+    background: var(--lightGray);
+    justify-self: end;
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+}
+
+#typingAreaInput {
+    border: none;
+    width: 100%;
+    margin-right: 2rem;
+}
+
+#typingAreaIcons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.typingAreaIcon {
+    margin: 0 1rem;
+    min-width: 1rem;
+    min-height: 1rem;
+}
+
+
+/* Contact Info */
+
+
+#contactInfo {
+    width: 25%;
+    padding: 1rem;
+}
+
+#contactInfoPicArea {
+    padding: 2rem;
+    text-align: center;
+}
+
+#contactInfoPicArea h3 {
+    margin: 1rem;
+}
+
+#contactInfoPic {
+    transform: scale(3);
+    margin: 1rem 0;
+}
+
+#settingsDiv {
+    padding: 0 1rem;
+    margin: 1rem 0;
+    background: var(--lightGray);
+    border-radius: 1rem;
+}
+
+#hideAlerts, #sendReadReceipts {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sliderDiv {
+    width: 10%;
+    background-color: var(--seaGreen);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.sliderDivOff {
+    width: 10%;
+    background-color: darkgray;
+    border-radius: 1rem;
+    display: flex;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.ball {
+    width: 60%;
+    height: 100%;
+    background-color: white;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#contactTimeline h4 {
+    margin: 2rem;
+    text-align: center;
+}
+
+#photosDiv {
+    padding: 0 1rem;
+    margin: 1rem 0;
+    background: var(--lightGray);
+    border-radius: 1rem;
+}
+
+#photosDiv p {
+    padding: 1rem 0;
+}
+
+#photos {
+    padding: 1rem 0;
+}
+
+
+
+/* Sign-in and Sign-up  */
+
+
+
+.pageContainer {
+    margin: 1rem;
+}
+
+.pageHeader {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 3rem;
+    margin-bottom: 1rem;
+}
+
+.signupContainer {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.input,
+.passwordInput,
+.emailInput,
+.nameInput,
+.textarea {
+  box-shadow: rgba(0, 0, 0, 0.11);
+  border: none;
+  background: var(--lightGray);
+  border-radius: 3rem;
+  height: 3rem;
+  width: 100%;
+  outline: none;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0 3rem;
+  font-size: 1rem;
+}
+
+.emailInput, .nameInput, .passwordInput {
+    margin: 2rem 0;
+}
+
+.passwordInputDiv {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.showPassword {
+    cursor: pointer;
+    padding: 1rem;
+    position: absolute;
+    right: 2rem;
+}
+
+.signInBar,
+.signUpBar {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: inherit;
+}
+
+.signUpBar {
+    display: flex;
+    justify-content: space-around;
+}
+
+.signInButton,
+.signUpButton,
+.signInText,
+.signUpText {
+  cursor: pointer;
+}
+
+.signInText,
+.signUpText {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.signInButton,
+.signUpButton {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 3rem;
+    background-color: #00cc66;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+#signUpEmailPassword {
+    margin: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.socialLogin {
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#socialLoginCaption {
+    /* font-size: 1.5rem; */
+    font-weight: 700;
+}
+  
+.socialIconDiv {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem;
+    margin: 1rem;
+    width: 3rem;
+    height: 3rem;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+  
+.socialIconImg {
+    width: 100%;
+}
+  
+.registerLink {
+    color: #00cc66;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+}

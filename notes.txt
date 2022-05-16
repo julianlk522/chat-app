@@ -1,0 +1,4 @@
+1. configure firebase database and add a few contacts
+2. import firebase data into project and link to state/context
+3. create interactivity functions and reducer to store them in
+4. final touches to UI
