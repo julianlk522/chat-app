@@ -2,3 +2,31 @@
 2. import firebase data into project and link to state/context
 3. create interactivity functions and reducer to store them in
 4. final touches to UI
+
+
+		--	NEW PLAN 6/8/22		--		
+
+use MySQL/PostGRES instead of Firebase
+
+React Google Login
+
+
+
+
+
+mySQL rPassword: mySqlRoot
+
+
+
+
+Messages:
+	-PK(id)
+	-Sender (FK users.id)
+	-Content (varchar)
+
+Chats:
+	-PK(id)
+	-User (FK users.id)
+	-Sender (FK users.id)
+	-LastMessage (FK messages.content)
+	-Seen (bool)

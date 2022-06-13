@@ -1,8 +1,4 @@
 import React, {useState} from 'react'
-import {toast} from 'react-toastify'
-import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
-import {db} from '../firebase.config'
-import {setDoc, doc, serverTimestamp} from 'firebase/firestore'
 import {Link, useNavigate} from 'react-router-dom'
 import OAuth from '../components/OAuth'
 import {FaArrowRight} from 'react-icons/fa'
@@ -27,32 +23,8 @@ function SignUp() {
       }))
     }
 
-    const onSubmit = async (event) => {
-      event.preventDefault()
-
-      try {
-        const auth = getAuth()
-
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-
-        const user = userCredential.user
-
-        updateProfile(auth.currentUser, {
-          displayName: name
-        })
-
-        const formDataCopy = {...formData}
-        delete formDataCopy.password
-        formDataCopy.timestamp = serverTimestamp()
-
-        await setDoc(doc(db, 'contacts', user.uid), formDataCopy)
-        
-        navigate('/')
-
-      } catch(error) {
-        toast.error('Error: Registration Failed')
-        console.log(error)
-      }
+    const onSubmit = () => {
+      console.log('submitted')
     }
     
     return (

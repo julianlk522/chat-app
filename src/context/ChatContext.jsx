@@ -6,9 +6,6 @@ export const ContextProvider = ({children}) => {
   
   const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState([])
-  // senderId: "friend",
-  // content: "What a nice day!",
-  // finished: true,
 
   const [contacts, setContacts] = useState([
     {

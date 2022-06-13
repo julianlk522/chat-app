@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-import {toast} from 'react-toastify'
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 import {Link, useNavigate} from 'react-router-dom'
 import OAuth from '../components/OAuth'
 import {FaArrowRight} from 'react-icons/fa'
@@ -13,7 +11,7 @@ function SignIn() {
       password: '',
     })
 
-    const {email, password, name} = formData
+    const {email, password} = formData
 
     const navigate = useNavigate()
   
@@ -24,20 +22,8 @@ function SignIn() {
       }))
     }
 
-    const onSubmit = async (event) => {
-      event.preventDefault()
-
-      try {
-        const auth = getAuth()
-
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-
-        if (userCredential.user) navigate('/')
-
-      } catch(error) {
-        toast.error('Error: Registration Failed')
-        console.log(error)
-      }
+    const onSubmit = () => {
+      console.log('submitted')
     }
     
     return (
