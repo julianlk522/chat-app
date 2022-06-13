@@ -5,7 +5,6 @@ export const getMessages = (req, res) => {
 
     db.query(sql, (err, results) => {
         if (err) throw err
-        console.log(results)
-        res.status(200).json({message: 'successfully fetched messages'})
+        res.status(200).json(results)
     })
 }

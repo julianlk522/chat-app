@@ -1,36 +1,45 @@
-import React, {createContext, useState} from 'react'
+import React, {createContext, useEffect, useState} from 'react'
 
 const ChatContext = createContext()
+const url = 'http://localhost:5000'
 
 export const ContextProvider = ({children}) => {
   
-  const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState([])
+  const [users, setUsers] = useState([])
 
-  const [contacts, setContacts] = useState([
-    {
-        name: "Sneha Thirkannad",
-        hiddenAlerts: true,
-        readReceiptsOn: true,
-    },
-    {
-        name: "Bradley Robasky",
-        hiddenAlerts: true,
-        readReceiptsOn: true,
-    },
-  ])
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${url}/users`)
+        const responseData = await response.json()
+        console.log(responseData)
+        setUsers(responseData)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchUsers()
+  }, [])
 
-  const handleSliderToggle = (e) => {
-    console.log(e.target);
-  }
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`${url}/messages`)
+        const responseData = await response.json()
+        console.log(responseData)
+        setMessages(responseData)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchMessages()
+  }, [])
 
   return <ChatContext.Provider
     value={{
         messages,
-        setMessages,
-        contacts,
-        setContacts,
-        handleSliderToggle
+        users,
     }}
   >
       {children}

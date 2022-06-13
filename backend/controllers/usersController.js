@@ -5,7 +5,6 @@ export const getUsers = (req, res) => {
 
     db.query(sql, (err, results) => {
         if (err) throw err
-        console.log(results)
-        res.status(200).json({message: 'users fetched successfully'})
+        res.status(200).json(results)
     })
 }
