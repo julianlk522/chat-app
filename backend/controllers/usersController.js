@@ -10,6 +10,15 @@ export const getUsers = (req, res) => {
     })
 }
 
+export const getUserContacts = (req, res) => {
+    const sql = `SELECT name, user_id, messages.sender_id, messages.receiver_id, messages.content FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId});`
+
+    db.query(sql, (err, results) => {
+        if (err) throw err
+        res.status(200).json(results)
+    })
+}
+
 export const newUser = (req, res) => {
     const {name, username, password} = req.body
 
@@ -59,7 +68,8 @@ export const loginUser = (req, res) => {
 
                     db.query(selectSql, (err, results) => {
                         if (err) throw err
-                        res.status(200).json(results)
+                        const {password, ...rest} = results[0]
+                        res.status(200).json(rest)
                     })
                 } else {
                     res.status(400).json({message: 'Error: invalid password provided'})

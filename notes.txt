@@ -22,6 +22,10 @@ Display only convos that contain the user
 
 User login route and context for logged in user
 
-Use Tailwind for frontend
+Login and signup pages
+
+Use Tailwind for frontend styling
 
 React Google Login ?
+
+Delete message route / frontend functionality

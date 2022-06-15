@@ -7,12 +7,12 @@ import visibilityIcon from '../assets/visibilityIcon.svg'
 function SignUp() {
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
-      email: '',
+      username: '',
       password: '',
       name: ''
     })
 
-    const {email, password, name} = formData
+    const {username, password, name} = formData
 
     const navigate = useNavigate()
   
@@ -38,11 +38,10 @@ function SignUp() {
 
             <form onSubmit={onSubmit}>
               <input 
-                type='email' 
                 className='emailInput'
-                placeholder='Email'
-                id='email'
-                value={email}
+                placeholder='Username'
+                id='username'
+                value={username}
                 onChange = {onChange}
               />
 

@@ -8,7 +8,7 @@ router
     .post(newMessage)
 
 router
-    .route('/:id')
+    .route('/:userId')
     .get(getUsersMessages)
 
 export default router

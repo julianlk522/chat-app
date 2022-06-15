@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import ChatContext from '../context/ChatContext'
+import { loginUser } from '../context/ChatActions'
 import {Link, useNavigate} from 'react-router-dom'
 import OAuth from '../components/OAuth'
 import {FaArrowRight} from 'react-icons/fa'
@@ -7,13 +9,14 @@ import visibilityIcon from '../assets/visibilityIcon.svg'
 function SignIn() {
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
-      email: '',
+      username: '',
       password: '',
     })
 
-    const {email, password} = formData
+    const {username, password} = formData
 
     const navigate = useNavigate()
+    const {dispatch} = useContext(ChatContext)
   
     const onChange = (event) => {
       setFormData((prevState) => ({
@@ -22,8 +25,12 @@ function SignIn() {
       }))
     }
 
-    const onSubmit = () => {
-      console.log('submitted')
+    const onSubmit = async (e) => {
+      e.preventDefault()
+      dispatch({type: 'SET_LOADING'})
+      const login = await (await loginUser(formData)).json()
+      dispatch({type: 'LOGIN_USER', payload: login})
+      navigate('/')
     }
     
     return (
@@ -31,17 +38,16 @@ function SignIn() {
           <div className="signupContainer">
             <header>
               <p className="pageHeader">Welcome back!</p>
-              <p>Enter your email and password below to sign-in</p>
+              <p>Enter your username and password below to sign-in</p>
 
             </header>
 
             <form onSubmit={onSubmit}>
               <input 
-                type='email' 
                 className='emailInput'
-                placeholder='Email'
-                id='email'
-                value={email}
+                placeholder='Username'
+                id='username'
+                value={username}
                 onChange = {onChange}
               />
 

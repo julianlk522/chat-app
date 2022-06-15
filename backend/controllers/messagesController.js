@@ -10,7 +10,7 @@ export const getMessages = (req, res) => {
 }
 
 export const getUsersMessages = (req, res) => {
-    const userId = req.params.id
+    const userId = req.params.userId
     
     const sql = `SELECT * FROM messages WHERE sender_id = ${userId} OR receiver_id = ${userId};`
 

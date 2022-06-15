@@ -1,45 +1,53 @@
-import React, {createContext, useEffect, useState} from 'react'
+import React, {createContext, useEffect, useReducer, useState} from 'react'
+import chatReducer from './ChatReducer'
 
 const ChatContext = createContext()
-const url = 'http://localhost:5000'
 
 export const ContextProvider = ({children}) => {
-  
-  const [messages, setMessages] = useState([])
-  const [users, setUsers] = useState([])
+  const initialState = {
+    user: {},
+    contacts: [],
+    messages: [],
+    loading: false
+  }
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(`${url}/users`)
-        const responseData = await response.json()
-        console.log(responseData)
-        setUsers(responseData)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchUsers()
-  }, [])
+  const [state, dispatch] = useReducer(chatReducer, initialState)
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(`${url}/messages`)
-        const responseData = await response.json()
-        console.log(responseData)
-        setMessages(responseData)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchMessages()
-  }, [])
+  // const [messages, setMessages] = useState([])
+  // const [contacts, setContacts] = useState([])
+
+  // useEffect(() => {
+  //   const fetchContacts = async () => {
+  //     try {
+  //       const response = await fetch(`${url}/users`)
+  //       const responseData = await response.json()
+  //       console.log(responseData)
+  //       setContacts(responseData)
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   fetchContacts()
+  // }, [])
+
+  // useEffect(() => {
+  //   const fetchMessages = async () => {
+  //     try {
+  //       const response = await fetch(`${url}/messages`)
+  //       const responseData = await response.json()
+  //       console.log(responseData)
+  //       setMessages(responseData)
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   fetchMessages()
+  // }, [])
 
   return <ChatContext.Provider
     value={{
-        messages,
-        users,
+        state,
+        dispatch
     }}
   >
       {children}
