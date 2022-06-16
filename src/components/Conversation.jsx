@@ -5,8 +5,14 @@ import Message from './Message';
 
 function Conversation() {
   const { state } = useContext(ChatContext);
-  const messages = state.messages;
   const currentUserId = state.user.user_id;
+  const selectedContactId = state.selectedContact;
+  const messages = state.messages.filter(message => {
+    return (
+      message.sender_id === selectedContactId ||
+      message.receiver_id === selectedContactId
+    );
+  });
 
   return (
     <div id="conversation">

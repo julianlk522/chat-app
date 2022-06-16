@@ -1,18 +1,19 @@
-import React, {createContext, useEffect, useReducer, useState} from 'react'
-import chatReducer from './ChatReducer'
+import React, { createContext, useEffect, useReducer, useState } from 'react';
+import chatReducer from './ChatReducer';
 
-const ChatContext = createContext()
+const ChatContext = createContext();
 
-export const ContextProvider = ({children}) => {
+export const ContextProvider = ({ children }) => {
   const initialState = {
     user: {},
     contacts: [],
+    selectedContact: null,
     messages: [],
     mostRecentMessages: [],
-    loading: false
-  }
+    loading: false,
+  };
 
-  const [state, dispatch] = useReducer(chatReducer, initialState)
+  const [state, dispatch] = useReducer(chatReducer, initialState);
 
   // const [messages, setMessages] = useState([])
   // const [contacts, setContacts] = useState([])
@@ -45,14 +46,16 @@ export const ContextProvider = ({children}) => {
   //   fetchMessages()
   // }, [])
 
-  return <ChatContext.Provider
-    value={{
+  return (
+    <ChatContext.Provider
+      value={{
         state,
-        dispatch
-    }}
-  >
+        dispatch,
+      }}
+    >
       {children}
-  </ChatContext.Provider>
-}
+    </ChatContext.Provider>
+  );
+};
 
-export default ChatContext
+export default ChatContext;

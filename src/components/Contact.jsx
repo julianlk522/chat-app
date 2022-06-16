@@ -1,10 +1,22 @@
-import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useContext } from 'react';
+import ChatContext from '../context/ChatContext';
+import { formatDistanceToNowStrict } from 'date-fns';
 import { RiGhostSmileLine } from 'react-icons/ri';
 
-function Contact({ name, recentMessages }) {
+function Contact({ name, id, recentMessages }) {
+  const { state, dispatch } = useContext(ChatContext);
+  const selectedContact = state.selectedContact;
+
   return (
-    <div className="contact">
+    <div
+      className="contact"
+      onClick={() => {
+        dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
+      }}
+      style={{
+        backgroundColor: selectedContact === id ? 'red' : '',
+      }}
+    >
       <RiGhostSmileLine className="contactPic" />
       <div className="contactBody">
         <div className="contactNameInfo">
@@ -23,7 +35,7 @@ function Contact({ name, recentMessages }) {
               .map((message, index) => {
                 return (
                   <p key={index}>
-                    {formatDistanceToNow(new Date(message.created_at), {
+                    {formatDistanceToNowStrict(new Date(message.created_at), {
                       includeSeconds: true,
                     })}
                   </p>

@@ -7,6 +7,7 @@ import { MdAdd } from 'react-icons/md';
 function MyChats() {
   const { state } = useContext(ChatContext);
   const recentMessages = state.mostRecentMessages;
+  const selectedContact = state.selectedContact;
 
   return (
     <div id="myChatsBody">
@@ -15,7 +16,9 @@ function MyChats() {
           return (
             <Contact
               name={contact.name}
+              id={contact.user_id}
               recentMessages={recentMessages}
+              selected={selectedContact.user_id === contact.user_id}
               key={index}
             />
           );

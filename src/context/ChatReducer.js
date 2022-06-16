@@ -15,6 +15,7 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         contacts: action.payload,
+        selectedContact: action.payload[0].user_id,
         loading: false,
       };
     case 'GET_USER_MESSAGES':
@@ -28,6 +29,11 @@ const chatReducer = (state, action) => {
         ...state,
         mostRecentMessages: action.payload,
         loading: false,
+      };
+    case 'SET_SELECTED_CONTACT':
+      return {
+        ...state,
+        selectedContact: action.payload,
       };
     default:
       return state;
