@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
-  loginUser,
   getUserMessages,
   getUserContacts,
   getUserMostRecentMessagesFromContacts,
@@ -36,7 +35,7 @@ function ChatScreen() {
       }
     };
     checkUser();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div

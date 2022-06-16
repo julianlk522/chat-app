@@ -6,12 +6,19 @@ import { MdAdd } from 'react-icons/md';
 
 function MyChats() {
   const { state } = useContext(ChatContext);
+  const recentMessages = state.mostRecentMessages;
 
   return (
     <div id="myChatsBody">
       {state.contacts ? (
         state.contacts.map((contact, index) => {
-          return <Contact name={contact.name} key={index} />;
+          return (
+            <Contact
+              name={contact.name}
+              recentMessages={recentMessages}
+              key={index}
+            />
+          );
         })
       ) : (
         <p>No contacts yet</p>

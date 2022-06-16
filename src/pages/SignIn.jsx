@@ -50,6 +50,9 @@ function SignIn() {
       type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
       payload: contactMsgData,
     });
+    //  set localstorage
+    const { user_id, name } = login;
+    localStorage.setItem('user', JSON.stringify({ user_id, name }));
     //  redirect after data has been fetched
     navigate('/');
   };

@@ -1,19 +1,18 @@
 import React from 'react';
 import { RiGhostSmileLine } from 'react-icons/ri';
 
-function Contact({ name }) {
+function Contact({ name, recentMessages }) {
   return (
     <div className="contact">
       <RiGhostSmileLine className="contactPic" />
       <div className="contactBody">
         <div className="contactNameInfo">
           <h4>{name}</h4>
-          {/* {messages
+          {recentMessages
             .filter(message => message.name === name)
-            .map(recentMessage => {
-              return <p>{recentMessage.content}</p>;
-            })} */}
-          <p className="lastMessage">The last thing I said...</p>
+            .map((message, index) => {
+              return <p key={index}>{message.content}</p>;
+            })}
         </div>
         <div className="contactBodyMsgInfo">
           <div className="newMessages"></div>
