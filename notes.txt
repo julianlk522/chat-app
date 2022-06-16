@@ -29,3 +29,6 @@ Use Tailwind for frontend styling
 React Google Login ?
 
 Delete message route / frontend functionality
+
+Assign createdAt field to messages	...	DONE
+	-add to controller getMostRecentMessage for all contacts

@@ -1,14 +1,17 @@
-import express from 'express'
-import {getMessages, getUsersMessages, newMessage} from '../controllers/messagesController.js'
-const router = express.Router()
+import express from 'express';
+import {
+  getMessages,
+  getMostRecentMessagesFromContacts,
+  getUserMessages,
+  newMessage,
+} from '../controllers/messagesController.js';
+const router = express.Router();
+
+router.route('/').get(getMessages).post(newMessage);
 
 router
-    .route('/')
-    .get(getMessages)
-    .post(newMessage)
+  .route('/:userId')
+  .get(getUserMessages)
+  .post(getMostRecentMessagesFromContacts);
 
-router
-    .route('/:userId')
-    .get(getUsersMessages)
-
-export default router
+export default router;

@@ -8,11 +8,11 @@ router
     .post(newUser)
 
 router
-    .route('/:userId')
-    .get(getUserContacts)
-
-router
     .route('/login')
     .post(loginUser)
+
+router
+    .route('/:userId')
+    .get(getUserContacts)
 
 export default router

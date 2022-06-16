@@ -8,6 +8,7 @@ export const ContextProvider = ({children}) => {
     user: {},
     contacts: [],
     messages: [],
+    mostRecentMessages: [],
     loading: false
   }
 
