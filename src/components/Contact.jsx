@@ -14,7 +14,7 @@ function Contact({ name, id, recentMessages }) {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
       }}
       style={{
-        backgroundColor: selectedContact === id ? 'red' : '',
+        backgroundColor: selectedContact === id ? '#79c2fc' : '',
       }}
     >
       <RiGhostSmileLine className="contactPic" />

@@ -32,3 +32,5 @@ Delete message route / frontend functionality
 
 Assign createdAt field to messages ... DONE
 	-add to controller getMostRecentMessage for all contacts ... DONE BETTER
+
+Assign user data for contact info section (name, pic, personal comment)

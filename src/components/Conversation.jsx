@@ -18,7 +18,9 @@ function Conversation() {
     <div id="conversation">
       <div id="conversationHeader">
         <div id="recipientNameArea">
-          <h3 id="recipientName">Sneha</h3>
+          <h3 id="recipientName" className="text-3xl">
+            Sneha
+          </h3>
           <div id="onlineStatus"></div>
           <span id="typingStatus">typing...</span>
         </div>
