@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDistanceToNow } from 'date-fns';
 import { RiGhostSmileLine } from 'react-icons/ri';
 
 function Contact({ name, recentMessages }) {
@@ -15,8 +16,20 @@ function Contact({ name, recentMessages }) {
             })}
         </div>
         <div className="contactBodyMsgInfo">
-          <div className="newMessages"></div>
-          <p>2 mins</p>
+          <div className="newMessages">
+            {/* <p>2 mins</p> */}
+            {recentMessages
+              .filter(message => message.name === name)
+              .map((message, index) => {
+                return (
+                  <p key={index}>
+                    {formatDistanceToNow(new Date(message.created_at), {
+                      includeSeconds: true,
+                    })}
+                  </p>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>

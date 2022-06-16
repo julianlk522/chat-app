@@ -16,6 +16,8 @@ function ChatScreen() {
     const checkUser = async () => {
       const storage = localStorage.getItem('user');
       if (storage) {
+        //  set user state to localstorage data
+        dispatch({ type: 'SET_USER', payload: JSON.parse(storage) });
         const userId = JSON.parse(storage).user_id;
         dispatch({ type: 'SET_LOADING' });
         //  retrieve user messages

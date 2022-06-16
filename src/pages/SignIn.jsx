@@ -35,7 +35,9 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const login = await (await loginUser(formData)).json();
-    dispatch({ type: 'LOGIN_USER', payload: login });
+    //  reduce login info to user state data
+    const { user_id, name } = login;
+    dispatch({ type: 'SET_USER', payload: { user_id, name } });
     //  retrieve user messages
     const userMessages = await (await getUserMessages(login.user_id)).json();
     dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages });
@@ -51,7 +53,6 @@ function SignIn() {
       payload: contactMsgData,
     });
     //  set localstorage
-    const { user_id, name } = login;
     localStorage.setItem('user', JSON.stringify({ user_id, name }));
     //  redirect after data has been fetched
     navigate('/');

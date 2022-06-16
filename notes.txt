@@ -18,9 +18,9 @@ Users:
 
 Todos:
 
-Display only convos that contain the user
+Display only convos that contain the user ... DONE
 
-User login route and context for logged in user
+User login route and context for logged in user ... DONE
 
 Login and signup pages
 
@@ -30,5 +30,5 @@ React Google Login ?
 
 Delete message route / frontend functionality
 
-Assign createdAt field to messages	...	DONE
-	-add to controller getMostRecentMessage for all contacts
+Assign createdAt field to messages ... DONE
+	-add to controller getMostRecentMessage for all contacts ... DONE BETTER

@@ -5,7 +5,7 @@ const chatReducer = (state, action) => {
         ...state,
         loading: true,
       };
-    case 'LOGIN_USER':
+    case 'SET_USER':
       return {
         ...state,
         user: action.payload,
