@@ -40,13 +40,7 @@ function ChatScreen() {
   }, [dispatch]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '100%',
-      }}
-    >
+    <div className="flex justify-between h-full">
       <MyChats />
       <Conversation />
       <ContactInfo />

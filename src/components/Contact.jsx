@@ -9,7 +9,7 @@ function Contact({ name, id, recentMessages }) {
 
   return (
     <div
-      className="contact"
+      className="flex items-center p-4"
       onClick={() => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
       }}
@@ -17,31 +17,32 @@ function Contact({ name, id, recentMessages }) {
         backgroundColor: selectedContact === id ? '#79c2fc' : '',
       }}
     >
-      <RiGhostSmileLine className="contactPic" />
-      <div className="contactBody">
-        <div className="contactNameInfo">
+      <RiGhostSmileLine className="mr-4" />
+      <div className="w-full flex justify-between items-center">
+        <div id="contactNameInfo">
           <h4>{name}</h4>
           {recentMessages
             .filter(message => message.name === name)
             .map((message, index) => {
-              return <p key={index}>{message.content}</p>;
+              return (
+                <p key={index} className="text-xs font-light">
+                  {message.content}
+                </p>
+              );
             })}
         </div>
-        <div className="contactBodyMsgInfo">
-          <div className="newMessages">
-            {/* <p>2 mins</p> */}
-            {recentMessages
-              .filter(message => message.name === name)
-              .map((message, index) => {
-                return (
-                  <p key={index}>
-                    {formatDistanceToNowStrict(new Date(message.created_at), {
-                      includeSeconds: true,
-                    })}
-                  </p>
-                );
-              })}
-          </div>
+        <div id="messageAge">
+          {recentMessages
+            .filter(message => message.name === name)
+            .map((message, index) => {
+              return (
+                <p key={index} className="w-16 text-center text-xs font-light">
+                  {formatDistanceToNowStrict(new Date(message.created_at), {
+                    includeSeconds: true,
+                  })}
+                </p>
+              );
+            })}
         </div>
       </div>
     </div>

@@ -50,6 +50,7 @@ export const ContextProvider = ({ children }) => {
     <ChatContext.Provider
       value={{
         state,
+        initialState,
         dispatch,
       }}
     >
