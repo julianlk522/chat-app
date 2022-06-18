@@ -1,21 +1,58 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import ChatContext from '../context/ChatContext';
+import {
+  createNewMessage,
+  getUserMostRecentMessagesFromContacts,
+} from '../context/ChatActions';
 import { MdCall, MdVideoCall, MdSend, MdAttachment } from 'react-icons/md';
 import Message from './Message';
 
 function Conversation() {
-  const { state } = useContext(ChatContext);
+  //  user/messages/selectedContact from context
+  const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
   const selectedContactId = state.selectedContact;
   const selectedContactName = state.contacts.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.name;
-  const messages = state.messages.filter(message => {
-    return (
-      message.sender_id === selectedContactId ||
-      message.receiver_id === selectedContactId
-    );
-  });
+  const messages =
+    state.messages && state.messages.length > 0
+      ? state?.messages?.filter(message => {
+          return (
+            message.sender_id === selectedContactId ||
+            message.receiver_id === selectedContactId
+          );
+        })
+      : [];
+  //  newMessage state
+  const [newMessage, setNewMessage] = useState('');
+
+  const onNewMessageChange = e => {
+    if (
+      e.target.value.indexOf('"') !== -1 ||
+      e.target.value.indexOf("'") !== -1
+    ) {
+      console.log('no quote charactes allowed!');
+      return;
+    }
+    setNewMessage(e.target.value);
+  };
+
+  const submitMessage = async e => {
+    e.preventDefault();
+    dispatch({ type: 'SET_LOADING' });
+    const updatedMessages = await (
+      await createNewMessage(currentUserId, selectedContactId, newMessage)
+    ).json();
+    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages });
+    const updatedContactMsgData = await (
+      await getUserMostRecentMessagesFromContacts(currentUserId)
+    ).json();
+    dispatch({
+      type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
+      payload: updatedContactMsgData,
+    });
+  };
 
   return (
     <div
@@ -71,12 +108,17 @@ function Conversation() {
       >
         <input
           type="text"
+          value={newMessage}
           placeholder="Type something to send..."
+          onChange={onNewMessageChange}
           id="typingAreaInputBox"
           className="w-full mr-8 px-4 outline-slate-200 rounded-xl"
         />
         <div id="typingAreaIcons" className="flex justify-between">
-          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white mr-4">
+          <button
+            className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white mr-4"
+            onClick={submitMessage}
+          >
             <MdSend className="mx-2 min-w-[1rem] min-h-[1rem]" />
           </button>
 

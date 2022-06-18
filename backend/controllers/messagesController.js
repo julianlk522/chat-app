@@ -35,13 +35,12 @@ export const newMessage = (req, res) => {
   const updateSql = `INSERT INTO messages (sender_id, receiver_id, content) VALUES ('${senderId}', '${receiverId}', '${content}');`;
 
   db.query(updateSql, err => {
-    const selectSql = 'SELECT * FROM messages;';
+    if (err) throw err;
+    const selectUpdatedUserMessagesSql = `SELECT * FROM messages WHERE sender_id = ${senderId} OR receiver_id = ${senderId};`;
 
-    db.query(selectSql, (err, results) => {
+    db.query(selectUpdatedUserMessagesSql, (err, results) => {
       if (err) throw err;
       res.status(200).json(results);
     });
-
-    if (err) throw err;
   });
 };

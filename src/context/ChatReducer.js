@@ -33,6 +33,12 @@ const chatReducer = (state, action) => {
         messages: action.payload,
         loading: false,
       };
+    case 'NEW_MESSAGE':
+      return {
+        ...state,
+        messages: action.payload,
+        loading: false,
+      };
     case 'GET_RECENT_MESSAGES_FROM_CONTACTS':
       return {
         ...state,
