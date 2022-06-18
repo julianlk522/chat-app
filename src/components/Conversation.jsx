@@ -30,7 +30,7 @@ function Conversation() {
           id="recipientNameArea"
           className="flex justify-center items-center"
         >
-          <h3 className="text-3xl mx-4 min-w-[33%]">{selectedContactName}</h3>
+          <h3 className="text-3xl mr-4 min-w-[33%]">{selectedContactName}</h3>
           <div
             id="onlineStatusDot"
             className="bg-emerald-500 inline-block w-4 h-4 rounded-full scale-75"
@@ -41,8 +41,13 @@ function Conversation() {
         </div>
 
         <div id="contactOptions" className="flex">
-          <MdCall className="mx-4" />
-          <MdVideoCall className="mx-4" />
+          <button className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
+            <MdCall className="mx-2" />
+          </button>
+
+          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
+            <MdVideoCall className="mx-2" />
+          </button>
         </div>
       </div>
 
@@ -68,11 +73,16 @@ function Conversation() {
           type="text"
           placeholder="Type something to send..."
           id="typingAreaInputBox"
-          className="w-full mr-8"
+          className="w-full mr-8 px-4 outline-slate-200 rounded-xl"
         />
         <div id="typingAreaIcons" className="flex justify-between">
-          <MdSend className="mx-4 min-w-[1rem] min-h-[1rem]" />
-          <MdAttachment className="mx-4 min-w-[1rem] min-h-[1rem]" />
+          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white mr-4">
+            <MdSend className="mx-2 min-w-[1rem] min-h-[1rem]" />
+          </button>
+
+          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
+            <MdAttachment className="mx-2 min-w-[1rem] min-h-[1rem]" />
+          </button>
         </div>
       </div>
     </div>
