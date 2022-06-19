@@ -3,6 +3,8 @@ import ChatContext from '../context/ChatContext';
 import {
   createNewMessage,
   getUserMostRecentMessagesFromContacts,
+  deleteMessage,
+  deleteMultipleMessages,
 } from '../context/ChatActions';
 import {
   MdCall,
@@ -31,6 +33,8 @@ function Conversation() {
         })
       : [];
   const queuedForDeleteArray = state.queuedForDelete;
+  //  confirm delete message state
+  const [confirmDelete, setConfirmDelete] = useState(false);
   //  newMessage state
   const [newMessage, setNewMessage] = useState('');
 
@@ -47,7 +51,7 @@ function Conversation() {
       e.target.value.indexOf('"') !== -1 ||
       e.target.value.indexOf("'") !== -1
     ) {
-      console.log('no quote charactes allowed!');
+      console.log('no quote characters allowed!');
       return;
     }
     setNewMessage(e.target.value);
@@ -68,6 +72,39 @@ function Conversation() {
       type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
       payload: updatedContactMsgData,
     });
+    setNewMessage('');
+  };
+
+  //  delete message(s)
+  const triggerDeleteMessage = async e => {
+    // e.preventDefault();
+    setConfirmDelete(!confirmDelete);
+    //  check if user has confirmed delete before calling actions
+    if (confirmDelete) {
+      setNewMessage('');
+      dispatch({ type: 'SET_LOADING' });
+      //  case for one deletion
+      if (queuedForDeleteArray.length === 1) {
+        console.log(queuedForDeleteArray[0].toString(), 'one');
+        const messagesMinusOne = await (
+          await deleteMessage(currentUserId, queuedForDeleteArray[0].toString())
+        ).json();
+        dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne });
+        //  case for multiple deletion
+      } else {
+        console.log(queuedForDeleteArray.toString(), 'multiple');
+        const messageMinusSeveral = await (
+          await deleteMultipleMessages(
+            currentUserId,
+            queuedForDeleteArray.toString()
+          )
+        ).json();
+        dispatch({
+          type: 'DELETE_MESSAGE',
+          payload: messageMinusSeveral,
+        });
+      }
+    } else return;
   };
 
   return (
@@ -103,6 +140,7 @@ function Conversation() {
             onClick={() => {
               setEditMode(!editMode);
               dispatch({ type: 'RESET_DELETION_CUE' });
+              setConfirmDelete(false);
             }}
           >
             <MdDelete className="mx-2" />
@@ -152,10 +190,13 @@ function Conversation() {
           <button
             id="deleteMessagesButton"
             className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 text-sm"
+            onClick={triggerDeleteMessage}
           >
-            {queuedForDeleteArray.length === 1
-              ? 'Delete message?'
-              : 'Delete messages?'}
+            {!confirmDelete
+              ? queuedForDeleteArray.length === 1
+                ? 'Delete message?'
+                : 'Delete messages?'
+              : 'Are you sure?'}
           </button>
         ) : (
           <div id="typingAreaIcons" className="flex justify-between">

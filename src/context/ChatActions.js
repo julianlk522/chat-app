@@ -47,12 +47,28 @@ export const createNewMessage = async (userId, contactId, content) => {
 };
 
 export const deleteMessage = async (userId, messageId) => {
-  const response = await fetch(`${API_URL}/messages/delete`, {
+  try {
+    const response = await fetch(`${API_URL}/messages/delete`, {
+      method: 'DELETE',
+      headers: jsonHeaders,
+      body: JSON.stringify({
+        userId,
+        messageId,
+      }),
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteMultipleMessages = async (userId, messageIdsString) => {
+  const response = await fetch(`${API_URL}/messages/delete/multiple`, {
     method: 'DELETE',
     headers: jsonHeaders,
     body: JSON.stringify({
       userId,
-      messageId,
+      messageIdsString,
     }),
   });
 

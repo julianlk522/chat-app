@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   deleteMessage,
+  deleteMultipleMessages,
   getMessages,
   getMostRecentMessagesFromContacts,
   getUserMessages,
@@ -16,5 +17,6 @@ router
   .post(getMostRecentMessagesFromContacts);
 
 router.route('/delete').delete(deleteMessage);
+router.route('/delete/multiple').delete(deleteMultipleMessages);
 
 export default router;

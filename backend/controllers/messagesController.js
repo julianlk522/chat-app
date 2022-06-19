@@ -49,12 +49,47 @@ export const deleteMessage = (req, res) => {
   const { userId, messageId } = req.body;
   const deleteSql = `DELETE FROM messages WHERE message_id = ${messageId};`;
 
+  console.log(deleteSql);
+
   db.query(deleteSql, err => {
     if (err) throw err;
     const selectUpdatedUserMessagesSql = `SELECT * FROM messages WHERE sender_id = ${userId} OR receiver_id = ${userId};`;
 
     db.query(selectUpdatedUserMessagesSql, (err, results) => {
       if (err) throw err;
+      res.status(200).json(results);
+    });
+  });
+};
+
+export const deleteMultipleMessages = (req, res) => {
+  const { userId, messageIdsString } = req.body;
+
+  if (!messageIdsString || !userId) {
+    throw new Error('userId or messageIdsString not provided');
+  }
+
+  // split ids into array to be looped over
+  const messageIdsArray = messageIdsString.split(',');
+
+  //  base sql using ids array
+  let deleteMultipleSql = `DELETE FROM messages WHERE message_id = ${messageIdsArray[0]}`;
+
+  //  add OR clauses for each additional message to be deleted
+  for (let n = messageIdsArray.length - 1; n > 0; n--) {
+    deleteMultipleSql =
+      deleteMultipleSql + ` OR message_id = ${messageIdsArray[n]}`;
+  }
+
+  deleteMultipleSql = deleteMultipleSql + ';';
+
+  db.query(deleteMultipleSql, err => {
+    if (err) throw err;
+    const selectUpdatedUserMessagesSql = `SELECT * FROM messages WHERE sender_id = ${userId} OR receiver_id = ${userId};`;
+
+    db.query(selectUpdatedUserMessagesSql, (err, results) => {
+      if (err) throw err;
+      console.log('deleteMultipleSql ultimately became: ', deleteMultipleSql);
       res.status(200).json(results);
     });
   });
