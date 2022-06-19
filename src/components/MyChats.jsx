@@ -33,7 +33,7 @@ function MyChats() {
         className="flex justify-center items-center w-full min-h-[10%]"
       >
         <button
-          className="rounded-2xl bg-amber-700 p-2 w-1/3"
+          className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
           onClick={e => {
             e.preventDefault();
             dispatch({ type: 'LOGOUT_USER' });

@@ -2,7 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { RiGhostSmileFill, RiGhostSmileLine, TiDelete } from 'react-icons/ri';
 
-function Message({ messageId, senderId, currentUserId, content, editMode }) {
+function Message({
+  messageId,
+  senderId,
+  currentUserId,
+  selectedContactId,
+  content,
+  editMode,
+}) {
   const [queuedForDelete, setQueuedForDelete] = useState(false);
 
   const { dispatch } = useContext(ChatContext);
@@ -10,7 +17,7 @@ function Message({ messageId, senderId, currentUserId, content, editMode }) {
   //  refresh queuedForDelete when editMode changes
   useEffect(() => {
     setQueuedForDelete(false);
-  }, [editMode]);
+  }, [editMode, selectedContactId]);
 
   return (
     <>
@@ -39,7 +46,7 @@ function Message({ messageId, senderId, currentUserId, content, editMode }) {
           {editMode && (
             <div
               className={`h-4 w-4 rounded-full ${
-                queuedForDelete ? 'bg-red-800' : 'border-2 border-slate-500'
+                queuedForDelete ? 'bg-red-700' : 'border-2 border-slate-500'
               }`}
             ></div>
           )}

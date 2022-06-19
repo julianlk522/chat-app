@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
   createNewMessage,
@@ -36,6 +36,10 @@ function Conversation() {
 
   //  editMode state
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    setEditMode(false);
+  }, [selectedContactId]);
 
   //  change newMessage state to user input unless there are quote characters
   const onNewMessageChange = e => {
@@ -89,7 +93,7 @@ function Conversation() {
           </span>
         </div>
 
-        <div id="contactOptions" className="flex">
+        <div id="conversationOptions" className="flex">
           <button
             className={`mr-4 ${
               !editMode
@@ -122,6 +126,7 @@ function Conversation() {
                 messageId={message.message_id}
                 senderId={message.sender_id}
                 currentUserId={currentUserId}
+                selectedContactId={selectedContactId}
                 content={message.content}
                 editMode={editMode}
                 key={index}
@@ -142,18 +147,30 @@ function Conversation() {
           id="typingAreaInputBox"
           className="w-full mr-8 px-4 outline-slate-200 rounded-xl"
         />
-        <div id="typingAreaIcons" className="flex justify-between">
-          <button
-            className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white mr-4"
-            onClick={submitMessage}
-          >
-            <MdSend className="mx-2 min-w-[1rem] min-h-[1rem]" />
-          </button>
 
-          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-            <MdAttachment className="mx-2 min-w-[1rem] min-h-[1rem]" />
+        {editMode && queuedForDeleteArray.length > 0 ? (
+          <button
+            id="deleteMessagesButton"
+            className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 text-sm"
+          >
+            {queuedForDeleteArray.length === 1
+              ? 'Delete message?'
+              : 'Delete messages?'}
           </button>
-        </div>
+        ) : (
+          <div id="typingAreaIcons" className="flex justify-between">
+            <button
+              className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white mr-4"
+              onClick={submitMessage}
+            >
+              <MdSend className="mx-2 min-w-[1rem] min-h-[1rem]" />
+            </button>
+
+            <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
+              <MdAttachment className="mx-2 min-w-[1rem] min-h-[1rem]" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

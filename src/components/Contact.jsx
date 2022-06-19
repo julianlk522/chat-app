@@ -12,6 +12,7 @@ function Contact({ name, id, recentMessages }) {
       className="flex items-center p-4"
       onClick={() => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
+        dispatch({ type: 'RESET_DELETION_CUE' });
       }}
       style={{
         backgroundColor: selectedContact === id ? '#79c2fc' : '',
