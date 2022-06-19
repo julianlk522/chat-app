@@ -91,8 +91,15 @@ function Conversation() {
 
         <div id="contactOptions" className="flex">
           <button
-            className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white"
-            onClick={() => setEditMode(!editMode)}
+            className={`mr-4 ${
+              !editMode
+                ? 'bg-sky-600 hover:bg-sky-700'
+                : 'bg-red-600 hover:bg-red-700'
+            } py-2 rounded-full text-white`}
+            onClick={() => {
+              setEditMode(!editMode);
+              dispatch({ type: 'RESET_DELETION_CUE' });
+            }}
           >
             <MdDelete className="mx-2" />
           </button>

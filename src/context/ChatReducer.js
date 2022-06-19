@@ -18,6 +18,7 @@ const chatReducer = (state, action) => {
         selectedContact: null,
         messages: [],
         mostRecentMessages: [],
+        queuedForDelete: [],
         loading: false,
       };
     case 'GET_USER_CONTACTS':
@@ -50,6 +51,11 @@ const chatReducer = (state, action) => {
         queuedForDelete: state.queuedForDelete.filter(id => {
           return id !== action.payload;
         }),
+      };
+    case 'RESET_DELETION_CUE':
+      return {
+        ...state,
+        queuedForDelete: [],
       };
     case 'DELETE_MESSAGE':
       return {

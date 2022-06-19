@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { RiGhostSmileFill, RiGhostSmileLine, TiDelete } from 'react-icons/ri';
 
@@ -6,6 +6,11 @@ function Message({ messageId, senderId, currentUserId, content, editMode }) {
   const [queuedForDelete, setQueuedForDelete] = useState(false);
 
   const { dispatch } = useContext(ChatContext);
+
+  //  refresh queuedForDelete when editMode changes
+  useEffect(() => {
+    setQueuedForDelete(false);
+  }, [editMode]);
 
   return (
     <>

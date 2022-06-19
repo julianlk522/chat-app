@@ -25,7 +25,12 @@ Use Tailwind for frontend styling
 React Google Login ?
 
 Delete message route / frontend functionality
+	Delete multiple messages sql/route
 
 Assign user data for contact info section (name, pic, personal comment)
 
 Add new contact functionality in MyChats component
+
+Fix ContactInfo component to show selected user state data
+
+Add max width to message body
