@@ -39,6 +39,24 @@ const chatReducer = (state, action) => {
         messages: action.payload,
         loading: false,
       };
+    case 'CUE_FOR_DELETION':
+      return {
+        ...state,
+        queuedForDelete: [...state.queuedForDelete, action.payload],
+      };
+    case 'REMOVE_FROM_DELETION_CUE':
+      return {
+        ...state,
+        queuedForDelete: state.queuedForDelete.filter(id => {
+          return id !== action.payload;
+        }),
+      };
+    case 'DELETE_MESSAGE':
+      return {
+        ...state,
+        messages: action.payload,
+        loading: false,
+      };
     case 'GET_RECENT_MESSAGES_FROM_CONTACTS':
       return {
         ...state,

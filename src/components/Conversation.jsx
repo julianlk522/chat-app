@@ -4,11 +4,17 @@ import {
   createNewMessage,
   getUserMostRecentMessagesFromContacts,
 } from '../context/ChatActions';
-import { MdCall, MdVideoCall, MdSend, MdAttachment } from 'react-icons/md';
+import {
+  MdCall,
+  MdVideoCall,
+  MdSend,
+  MdAttachment,
+  MdDelete,
+} from 'react-icons/md';
 import Message from './Message';
 
 function Conversation() {
-  //  user/messages/selectedContact from context
+  //  context (user, messages, selectedContact, queuedForDelete)
   const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
   const selectedContactId = state.selectedContact;
@@ -24,9 +30,14 @@ function Conversation() {
           );
         })
       : [];
+  const queuedForDeleteArray = state.queuedForDelete;
   //  newMessage state
   const [newMessage, setNewMessage] = useState('');
 
+  //  editMode state
+  const [editMode, setEditMode] = useState(false);
+
+  //  change newMessage state to user input unless there are quote characters
   const onNewMessageChange = e => {
     if (
       e.target.value.indexOf('"') !== -1 ||
@@ -38,6 +49,7 @@ function Conversation() {
     setNewMessage(e.target.value);
   };
 
+  //  create new message
   const submitMessage = async e => {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
@@ -78,6 +90,13 @@ function Conversation() {
         </div>
 
         <div id="contactOptions" className="flex">
+          <button
+            className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white"
+            onClick={() => setEditMode(!editMode)}
+          >
+            <MdDelete className="mx-2" />
+          </button>
+
           <button className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
             <MdCall className="mx-2" />
           </button>
@@ -93,9 +112,11 @@ function Conversation() {
           messages.map((message, index) => {
             return (
               <Message
+                messageId={message.message_id}
                 senderId={message.sender_id}
                 currentUserId={currentUserId}
                 content={message.content}
+                editMode={editMode}
                 key={index}
               />
             );

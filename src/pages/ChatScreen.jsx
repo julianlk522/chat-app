@@ -8,9 +8,11 @@ import {
 import MyChats from '../components/MyChats';
 import Conversation from '../components/Conversation';
 import ContactInfo from '../components/ContactInfo';
+import { useNavigate } from 'react-router-dom';
 
 function ChatScreen() {
   const { dispatch } = useContext(ChatContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -34,6 +36,8 @@ function ChatScreen() {
           type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
           payload: contactMsgData,
         });
+      } else {
+        navigate('/sign-up');
       }
     };
     checkUser();

@@ -46,6 +46,19 @@ export const createNewMessage = async (userId, contactId, content) => {
   return response;
 };
 
+export const deleteMessage = async (userId, messageId) => {
+  const response = await fetch(`${API_URL}/messages/delete`, {
+    method: 'DELETE',
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      userId,
+      messageId,
+    }),
+  });
+
+  return response;
+};
+
 export const getUserMostRecentMessagesFromContacts = async userId => {
   const response = await fetch(`${API_URL}/messages/${userId}`, {
     method: 'POST',

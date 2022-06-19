@@ -44,3 +44,18 @@ export const newMessage = (req, res) => {
     });
   });
 };
+
+export const deleteMessage = (req, res) => {
+  const { userId, messageId } = req.body;
+  const deleteSql = `DELETE FROM messages WHERE message_id = ${messageId};`;
+
+  db.query(deleteSql, err => {
+    if (err) throw err;
+    const selectUpdatedUserMessagesSql = `SELECT * FROM messages WHERE sender_id = ${userId} OR receiver_id = ${userId};`;
+
+    db.query(selectUpdatedUserMessagesSql, (err, results) => {
+      if (err) throw err;
+      res.status(200).json(results);
+    });
+  });
+};
