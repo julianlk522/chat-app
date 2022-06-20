@@ -23,7 +23,7 @@ function Conversation() {
   const selectedContactName = state.contacts.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.name;
-  const messages =
+  const userMessages =
     state.messages && state.messages.length > 0
       ? state?.messages?.filter(message => {
           return (
@@ -37,7 +37,6 @@ function Conversation() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   //  newMessage state
   const [newMessage, setNewMessage] = useState('');
-
   //  editMode state
   const [editMode, setEditMode] = useState(false);
 
@@ -77,7 +76,7 @@ function Conversation() {
 
   //  delete message(s)
   const triggerDeleteMessage = async e => {
-    // e.preventDefault();
+    e.preventDefault();
     setConfirmDelete(!confirmDelete);
     //  check if user has confirmed delete before calling actions
     if (confirmDelete) {
@@ -157,8 +156,8 @@ function Conversation() {
       </div>
 
       <div id="conversationBody" className="h-4/5">
-        {messages &&
-          messages.map((message, index) => {
+        {userMessages &&
+          userMessages.map((message, index) => {
             return (
               <Message
                 messageId={message.message_id}
@@ -181,6 +180,7 @@ function Conversation() {
           type="text"
           value={newMessage}
           placeholder="Type something to send..."
+          autoComplete="off"
           onChange={onNewMessageChange}
           id="typingAreaInputBox"
           className="w-full mr-8 px-4 outline-slate-200 rounded-xl"

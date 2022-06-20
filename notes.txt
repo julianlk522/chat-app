@@ -24,8 +24,8 @@ Use Tailwind for frontend styling
 
 React Google Login ?
 
-Delete message route / frontend functionality
-	Delete multiple messages sql/route
+Delete message route / frontend functionality ... DONE
+	Delete multiple messages sql/route ... DONE
 
 Assign user data for contact info section (name, pic, personal comment)
 
