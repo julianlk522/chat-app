@@ -33,4 +33,4 @@ Add new contact functionality in MyChats component
 
 Fix ContactInfo component to show selected user state data
 
-Add max width to message body
+Add max width to message body ... DONE

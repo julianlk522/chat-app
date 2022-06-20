@@ -37,7 +37,7 @@ function MyChats() {
           onClick={e => {
             e.preventDefault();
             dispatch({ type: 'LOGOUT_USER' });
-            localStorage.clear();
+            localStorage.removeItem('user');
             navigate('/sign-in');
           }}
         >
