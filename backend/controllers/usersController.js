@@ -11,7 +11,7 @@ export const getUsers = (req, res) => {
 };
 
 export const getUserContacts = (req, res) => {
-  const sql = `SELECT name, user_id FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name;`;
+  const sql = `SELECT name, user_id, prefered_pic FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name;`;
 
   db.query(sql, (err, results) => {
     if (err) throw err;

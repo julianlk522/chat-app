@@ -5,9 +5,12 @@ import {
   getUserMostRecentMessagesFromContacts,
 } from '../context/ChatActions';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { RiGhostSmileLine } from 'react-icons/ri';
+import genericPic from '../assets/genericPic.jpg';
+import crazyGuyPic from '../assets/crazyGuyPic.jpg';
+import trexPic from '../assets/trexPic.jpg';
+import gorfPic from '../assets/gorfPic.jpg';
 
-function Contact({ name, id, recentMessages }) {
+function Contact({ name, id, recentMessages, prefered_pic }) {
   const { state, dispatch } = useContext(ChatContext);
   const selectedContact = state.selectedContact;
   const userId = state.user.user_id;
@@ -30,7 +33,19 @@ function Contact({ name, id, recentMessages }) {
         dispatch({ type: 'RESET_DELETION_CUE' });
       }}
     >
-      <RiGhostSmileLine className="mr-4" />
+      <img
+        src={
+          prefered_pic === 1
+            ? trexPic
+            : prefered_pic === 2
+            ? gorfPic
+            : prefered_pic === 3
+            ? crazyGuyPic
+            : genericPic
+        }
+        alt="profile pic"
+        className="rounded-full w-8 h-8 object-cover border-2 border-slate-300 border-opacity-50 mr-4"
+      />
       <div className="w-full flex justify-between items-center">
         <div id="contactNameInfo">
           <h4>{name}</h4>

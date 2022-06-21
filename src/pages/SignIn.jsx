@@ -42,9 +42,12 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const login = await (await loginUser(formData)).json();
-    const { user_id, name } = login;
+    const { user_id, name, prefered_pic } = login;
     //  set localstorage
-    localStorage.setItem('user', JSON.stringify({ user_id, name }));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ user_id, name, prefered_pic })
+    );
     navigate('/');
   };
 

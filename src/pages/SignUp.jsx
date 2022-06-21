@@ -43,9 +43,12 @@ function SignUp() {
     dispatch({ type: 'SET_LOADING' });
     //  sign up user, retrieve new id
     const newUserData = await (await createNewUser(formData)).json();
-    const { user_id, name } = newUserData;
+    const { user_id, name, prefered_pic } = newUserData;
     //  set localstorage
-    localStorage.setItem('user', JSON.stringify({ user_id, name }));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ user_id, name, prefered_pic })
+    );
     navigate('/');
   };
 
