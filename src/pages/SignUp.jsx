@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ChatContext from '../context/ChatContext';
 import { createNewUser } from '../context/ChatActions';
-import OAuth from '../components/OAuth';
 import { FaArrowRight } from 'react-icons/fa';
 import visibilityIcon from '../assets/visibilityIcon.svg';
 
@@ -42,16 +41,17 @@ function SignUp() {
 
   return (
     <>
-      <div className="signupContainer">
+      <div className="flex flex-col text-center px-8">
         <header>
-          <p className="pageHeader">Welcome!</p>
+          <p id="header" className="text-4xl font-extrabold m-12 mb-4">
+            Welcome!
+          </p>
           <p>Fill out the form below to sign up and start chatting</p>
         </header>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="flex flex-col">
           <input
-            type="text"
-            className="nameInput"
+            className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
             placeholder="Name"
             id="name"
             value={name}
@@ -59,17 +59,17 @@ function SignUp() {
           />
 
           <input
-            className="emailInput"
+            className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
             placeholder="Username"
             id="username"
             value={username}
             onChange={onChange}
           />
 
-          <div className="passwordInputDiv">
+          <div id="passwordDiv" className="flex items-center relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="passwordInput"
+              className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
               placeholder="Password"
               id="password"
               value={password}
@@ -79,29 +79,28 @@ function SignUp() {
             <img
               src={visibilityIcon}
               alt="Show Password"
-              className="showPassword"
+              className="cursor-pointer absolute p-4 right-8"
               onClick={() => setShowPassword(prevState => !prevState)}
             />
           </div>
 
-          <div className="signUpBar">
-            <div id="signUpEmailPassword">
-              <p className="signUpText">
-                {name.length >= 6 && password.length >= 6
-                  ? 'Sign Up!'
-                  : 'Sign up (requires valid name, username and password)'}
-              </p>
-              <button className="signUpButton">
-                <FaArrowRight fill="white" width="34px" height="34px" />
-              </button>
-            </div>
-
-            <OAuth />
+          <div className="flex flex-col justify-evenly items-center my-8">
+            <p className="cursor-pointer text-2xl font-bold">
+              {name.length >= 6 && password.length >= 6
+                ? 'Sign Up!'
+                : 'Sign up (requires valid name, username and password)'}
+            </p>
+            <button className="cursor-pointer mt-4 flex justify-center items-center w-12 h-12 bg-sky-500 rounded-full border-2 border-slate-300">
+              <FaArrowRight fill="white" width="2rem" height="2rem" />
+            </button>
           </div>
         </form>
 
-        <Link to="/sign-in" className="registerLink">
-          Sign In
+        <Link
+          to="/sign-in"
+          className="text-sky-500 font-semibold text-center flex justify-center items-center mt-16"
+        >
+          Take me to Sign In instead
         </Link>
       </div>
     </>

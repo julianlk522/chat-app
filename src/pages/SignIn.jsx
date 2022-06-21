@@ -7,7 +7,6 @@ import {
   getUserMostRecentMessagesFromContacts,
 } from '../context/ChatActions';
 import { Link, useNavigate } from 'react-router-dom';
-import OAuth from '../components/OAuth';
 import { FaArrowRight } from 'react-icons/fa';
 import visibilityIcon from '../assets/visibilityIcon.svg';
 
@@ -59,25 +58,27 @@ function SignIn() {
 
   return (
     <>
-      <div className="signupContainer">
+      <div className="flex flex-col text-center px-8">
         <header>
-          <p className="pageHeader">Welcome back!</p>
+          <p id="header" className="text-4xl font-extrabold m-12 mb-4">
+            Welcome back!
+          </p>
           <p>Enter your username and password below to sign-in</p>
         </header>
 
         <form onSubmit={onSubmit}>
           <input
-            className="emailInput"
+            className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
             placeholder="Username"
             id="username"
             value={username}
             onChange={onChange}
           />
 
-          <div className="passwordInputDiv">
+          <div id="passwordDiv" className="flex items-center relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="passwordInput"
+              className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
               placeholder="Password"
               id="password"
               value={password}
@@ -87,25 +88,24 @@ function SignIn() {
             <img
               src={visibilityIcon}
               alt="Show Password"
-              className="showPassword"
+              className="cursor-pointer absolute p-4 right-8"
               onClick={() => setShowPassword(prevState => !prevState)}
             />
           </div>
 
-          <div className="signInBar">
-            <div id="signUpEmailPassword">
-              <p className="signInText">Sign in</p>
-              <button className="signInButton">
-                <FaArrowRight fill="white" width="34px" height="34px" />
-              </button>
-            </div>
-
-            <OAuth />
+          <div className="flex justify-evenly items-center my-8">
+            <p className="cursor-pointer text-2xl font-bold">Sign in</p>
+            <button className="cursor-pointer flex justify-center items-center w-12 h-12 bg-sky-500 rounded-full border-2 border-slate-200">
+              <FaArrowRight fill="white" width="2rem" height="2rem" />
+            </button>
           </div>
         </form>
 
-        <Link to="/sign-up" className="registerLink">
-          Sign Up
+        <Link
+          to="/sign-up"
+          className="text-sky-500 font-semibold text-center flex justify-center items-center mt-20"
+        >
+          Take me to Sign Up instead
         </Link>
       </div>
     </>
