@@ -109,7 +109,7 @@ function Conversation() {
   return (
     <div
       id="conversation"
-      className="flex flex-col w-1/2 border-2 border-slate-300 overflow-hidden"
+      className="flex flex-col w-1/2 border-x-2 border-x-slate-300 overflow-hidden"
     >
       <div
         id="convoHeader"

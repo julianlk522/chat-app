@@ -20,7 +20,7 @@ Todos:
 
 Login and signup pages
 
-Use Tailwind for frontend styling
+Use Tailwind for frontend styling ... DONE
 
 React Google Login ?
 

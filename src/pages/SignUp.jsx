@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ChatContext from '../context/ChatContext';
 import { createNewUser } from '../context/ChatActions';
@@ -15,6 +15,19 @@ function SignUp() {
 
   const { name, username, password } = formData;
 
+  //  submit disabled state
+  const [readyForSubmit, setReadyForSubmit] = useState(false);
+
+  //  check for submit disabled on username/password change
+  useEffect(() => {
+    const checkReadyForSubmit = () => {
+      if (username.length >= 6 && password.length >= 6 && name.length > 0) {
+        setReadyForSubmit(true);
+      } else setReadyForSubmit(false);
+    };
+    checkReadyForSubmit();
+  }, [username.length, password.length, name.length]);
+
   const navigate = useNavigate();
   const { dispatch } = useContext(ChatContext);
 
@@ -29,13 +42,10 @@ function SignUp() {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
     //  sign up user, retrieve new id
-    const newUserData = await (await await createNewUser(formData)).json();
-    //  remove username, set logged-in user to new user data
+    const newUserData = await (await createNewUser(formData)).json();
     const { user_id, name } = newUserData;
-    // dispatch({ type: 'SET_USER', payload: { user_id, name } });
     //  set localstorage
     localStorage.setItem('user', JSON.stringify({ user_id, name }));
-    //  redirect after setting user
     navigate('/');
   };
 
@@ -85,12 +95,17 @@ function SignUp() {
           </div>
 
           <div className="flex flex-col justify-evenly items-center my-8">
-            <p className="cursor-pointer text-2xl font-bold">
+            <p className="text-2xl font-bold">
               {name.length >= 6 && password.length >= 6
                 ? 'Sign Up!'
                 : 'Sign up (requires valid name, username and password)'}
             </p>
-            <button className="cursor-pointer mt-4 flex justify-center items-center w-12 h-12 bg-sky-500 rounded-full border-2 border-slate-300">
+            <button
+              className={`mt-4 flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 ${
+                readyForSubmit ? 'bg-sky-500 cursor-pointer' : 'bg-slate-300'
+              }`}
+              disabled={!readyForSubmit}
+            >
               <FaArrowRight fill="white" width="2rem" height="2rem" />
             </button>
           </div>

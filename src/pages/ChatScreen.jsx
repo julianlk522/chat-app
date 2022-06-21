@@ -43,7 +43,7 @@ function ChatScreen() {
       }
     };
     checkUser();
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   return (
     <div className="flex justify-between h-full">

@@ -42,6 +42,16 @@ export const getUserMessages = async userId => {
   return response;
 };
 
+export const readContactMessages = async (userId, contactId) => {
+  const response = await fetch(`${API_URL}/messages`, {
+    method: 'PATCH',
+    headers: jsonHeaders,
+    body: JSON.stringify({ userId, contactId }),
+  });
+
+  return response;
+};
+
 export const createNewMessage = async (userId, contactId, content) => {
   const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',

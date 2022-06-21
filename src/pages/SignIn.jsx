@@ -1,11 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
-import {
-  loginUser,
-  getUserMessages,
-  getUserContacts,
-  getUserMostRecentMessagesFromContacts,
-} from '../context/ChatActions';
+import { loginUser } from '../context/ChatActions';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import visibilityIcon from '../assets/visibilityIcon.svg';
@@ -18,6 +13,19 @@ function SignIn() {
   });
 
   const { username, password } = formData;
+
+  //  submit disabled state
+  const [readyForSubmit, setReadyForSubmit] = useState(false);
+
+  //  check for submit disabled on username/password change
+  useEffect(() => {
+    const checkReadyForSubmit = () => {
+      if (username.length >= 6 && password.length >= 6) {
+        setReadyForSubmit(true);
+      } else setReadyForSubmit(false);
+    };
+    checkReadyForSubmit();
+  }, [username.length, password.length]);
 
   const navigate = useNavigate();
   const { dispatch } = useContext(ChatContext);
@@ -34,25 +42,9 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const login = await (await loginUser(formData)).json();
-    //  reduce login info to user state data
     const { user_id, name } = login;
-    //  retrieve user messages
-    const userMessages = await (await getUserMessages(user_id)).json();
-    dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages });
-    //  retrieve user contacts
-    const contactsData = await (await getUserContacts(user_id)).json();
-    dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData });
-    //  retrieve recent messages from each contact
-    const contactMsgData = await (
-      await getUserMostRecentMessagesFromContacts(user_id)
-    ).json();
-    dispatch({
-      type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-      payload: contactMsgData,
-    });
     //  set localstorage
     localStorage.setItem('user', JSON.stringify({ user_id, name }));
-    //  redirect after data has been fetched
     navigate('/');
   };
 
@@ -94,8 +86,13 @@ function SignIn() {
           </div>
 
           <div className="flex justify-evenly items-center my-8">
-            <p className="cursor-pointer text-2xl font-bold">Sign in</p>
-            <button className="cursor-pointer flex justify-center items-center w-12 h-12 bg-sky-500 rounded-full border-2 border-slate-200">
+            <p className="text-2xl font-bold">Sign in</p>
+            <button
+              className={`flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 ${
+                readyForSubmit ? 'bg-sky-500 cursor-pointer' : 'bg-slate-300'
+              }`}
+              disabled={!readyForSubmit}
+            >
               <FaArrowRight fill="white" width="2rem" height="2rem" />
             </button>
           </div>

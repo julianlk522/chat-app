@@ -6,10 +6,11 @@ import {
   getMostRecentMessagesFromContacts,
   getUserMessages,
   newMessage,
+  readContactMessages,
 } from '../controllers/messagesController.js';
 const router = express.Router();
 
-router.route('/').get(getMessages).post(newMessage);
+router.route('/').get(getMessages).post(newMessage).patch(readContactMessages);
 
 router
   .route('/:userId')

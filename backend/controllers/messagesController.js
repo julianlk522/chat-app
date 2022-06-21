@@ -21,11 +21,27 @@ export const getUserMessages = (req, res) => {
 };
 
 export const getMostRecentMessagesFromContacts = (req, res) => {
-  const sql = `SELECT users.name, sender_id, receiver_id, content, created_at FROM (SELECT users.name, message_id, sender_id, receiver_id, content, created_at FROM messages JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} AND (sender_id = ${req.params.userId} OR receiver_id = ${req.params.userId}) GROUP BY users.name) as user_contacts_select JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} ORDER BY created_at;`;
+  const sql = `SELECT users.name, sender_id, receiver_id, content, seen, created_at FROM (SELECT users.name, message_id, sender_id, receiver_id, content, seen, created_at FROM messages JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} AND (sender_id = ${req.params.userId} OR receiver_id = ${req.params.userId}) GROUP BY users.name) as user_contacts_select JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} ORDER BY created_at;`;
 
   db.query(sql, (err, results) => {
     if (err) throw err;
     res.status(200).json(results);
+  });
+};
+
+export const readContactMessages = (req, res) => {
+  const { userId, contactId } = req.body;
+
+  if (!userId || !contactId) {
+    res.status(400);
+    throw new Error('userId or contactId not provided');
+  }
+
+  const sql = `UPDATE messages SET seen = 1 WHERE sender_id = ${contactId} AND receiver_id = ${userId};`;
+
+  db.query(sql, err => {
+    if (err) throw err;
+    res.status(200).json({ message: 'successfully updated seen' });
   });
 };
 
