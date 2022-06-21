@@ -6,6 +6,16 @@ const paramsHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',
 };
 
+export const createNewUser = async signupData => {
+  const response = await fetch(`${API_URL}/users`, {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(signupData),
+  });
+
+  return response;
+};
+
 export const loginUser = async loginData => {
   const response = await fetch(`${API_URL}/users/login`, {
     method: 'POST',

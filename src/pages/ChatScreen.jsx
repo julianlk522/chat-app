@@ -27,15 +27,17 @@ function ChatScreen() {
         dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages });
         //  retrieve user contacts
         const contactsData = await (await getUserContacts(userId)).json();
-        dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData });
-        //  retrieve recent messages from each contact
-        const contactMsgData = await (
-          await getUserMostRecentMessagesFromContacts(userId)
-        ).json();
-        dispatch({
-          type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-          payload: contactMsgData,
-        });
+        if (contactsData.length > 0) {
+          dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData });
+          //  retrieve recent messages from each contact
+          const contactMsgData = await (
+            await getUserMostRecentMessagesFromContacts(userId)
+          ).json();
+          dispatch({
+            type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
+            payload: contactMsgData,
+          });
+        }
       } else {
         navigate('/sign-up');
       }

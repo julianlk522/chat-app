@@ -18,8 +18,9 @@ function ContactInfo() {
   const [newNickname, setNewNickname] = useState('');
 
   //  nickname data from localstorage
-  const nicknameStorage = JSON.parse(localStorage.getItem('nicknames'));
-  console.log(nicknameStorage);
+  // let nicknameStorage;
+  // nicknameStorage = JSON.parse(localStorage.getItem('nicknames'));
+  // console.log(nicknameStorage);
 
   return (
     <div id="contactInfo" className="w-1/4 p-4 flex flex-col">
@@ -32,7 +33,13 @@ function ContactInfo() {
 
         <div id="nickname" className="px-4 flex justify-between items-center">
           {!editNickname ? (
-            <p>{nicknameStorage[selectedContactName] || 'The legend'}</p>
+            <p>
+              {/* {nicknameStorage
+                ? nicknameStorage[selectedContactName]
+                :  */}
+              'The legend'
+              {/* } */}
+            </p>
           ) : (
             <input
               type="text"
@@ -54,7 +61,7 @@ function ContactInfo() {
                 localStorage.setItem(
                   'nicknames',
                   JSON.stringify({
-                    ...nicknameStorage,
+                    // ...nicknameStorage,
                     [selectedContactName]: newNickname,
                   })
                 );

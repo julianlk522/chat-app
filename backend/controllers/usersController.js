@@ -33,15 +33,15 @@ export const newUser = (req, res) => {
         const createUserSql = `INSERT INTO users (name, username, password) VALUES ('${name}', '${username}', '${password}');`;
 
         return db.query(createUserSql, err => {
-          //  return updated user list
-          const selectSql = 'SELECT * FROM users;';
+          if (err) throw err;
+          //  return logged-in user data
+          const selectSql = `SELECT * FROM users WHERE username = \'${username}\';`;
 
           db.query(selectSql, (err, results) => {
             if (err) throw err;
-            res.status(200).json(results);
+            const { password, ...rest } = results[0];
+            res.status(200).json(rest);
           });
-
-          if (err) throw err;
         });
       } else {
         res.status(400).json({

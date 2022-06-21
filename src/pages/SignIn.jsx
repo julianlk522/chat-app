@@ -37,16 +37,15 @@ function SignIn() {
     const login = await (await loginUser(formData)).json();
     //  reduce login info to user state data
     const { user_id, name } = login;
-    dispatch({ type: 'SET_USER', payload: { user_id, name } });
     //  retrieve user messages
-    const userMessages = await (await getUserMessages(login.user_id)).json();
+    const userMessages = await (await getUserMessages(user_id)).json();
     dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages });
     //  retrieve user contacts
-    const contactsData = await (await getUserContacts(login.user_id)).json();
+    const contactsData = await (await getUserContacts(user_id)).json();
     dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData });
     //  retrieve recent messages from each contact
     const contactMsgData = await (
-      await getUserMostRecentMessagesFromContacts(login.user_id)
+      await getUserMostRecentMessagesFromContacts(user_id)
     ).json();
     dispatch({
       type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
