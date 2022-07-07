@@ -25,7 +25,8 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         contacts: action.payload,
-        selectedContact: action.payload[0].user_id,
+        selectedContact:
+          action.payload[0]?.user_id && action.payload[0].user_id,
         loading: false,
       };
     case 'GET_USER_MESSAGES':

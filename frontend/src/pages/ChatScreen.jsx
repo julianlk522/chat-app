@@ -24,18 +24,18 @@ function ChatScreen() {
         dispatch({ type: 'SET_LOADING' });
         //  retrieve user messages
         const userMessages = await (await getUserMessages(userId)).json();
-        dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages });
+        dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages[0] });
         //  retrieve user contacts
         const contactsData = await (await getUserContacts(userId)).json();
         if (contactsData.length > 0) {
-          dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData });
+          dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData[0] });
           //  retrieve recent messages from each contact
           const contactMsgData = await (
             await getUserMostRecentMessagesFromContacts(userId)
           ).json();
           dispatch({
             type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-            payload: contactMsgData,
+            payload: contactMsgData[0],
           });
         }
       } else {

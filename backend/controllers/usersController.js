@@ -13,7 +13,7 @@ export const getUserContacts = asyncHandler(async (req, res) => {
 
 	const sql = `SELECT name, user_id, prefered_pic FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name;`
 
-	contactsData = await db.query(sql)
+	const contactsData = await db.query(sql)
 	res.status(200).json(contactsData)
 })
 
