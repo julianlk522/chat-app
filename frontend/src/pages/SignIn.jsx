@@ -43,13 +43,8 @@ function SignIn() {
     //  log in user, retrieve id
     const login = await loginUser(formData);
     const loginInfo = await login.json();
-    console.log(loginInfo);
-    const { user_id, name, prefered_pic } = loginInfo;
     //  set localstorage
-    localStorage.setItem(
-      'chatUser',
-      JSON.stringify({ user_id, name, prefered_pic })
-    );
+    localStorage.setItem('chatUser', JSON.stringify(loginInfo));
     navigate('/');
   };
 

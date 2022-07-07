@@ -4,53 +4,51 @@ import asyncHandler from 'express-async-handler'
 export const getUsers = asyncHandler(async (req, res) => {
 	const sql = 'SELECT * FROM users;'
 
-	db.query(sql, (err, results) => {
-		if (err) throw err
-		res.status(200).json(results)
-	})
+	const userData = await db.query(sql)
+	res.status(200).json(userData)
 })
 
 export const getUserContacts = asyncHandler(async (req, res) => {
+	if (!req.params.userId) throw new Error('No user ID provided')
+
 	const sql = `SELECT name, user_id, prefered_pic FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name;`
 
-	db.query(sql, (err, results) => {
-		if (err) throw err
-		res.status(200).json(results)
-	})
+	contactsData = await db.query(sql)
+	res.status(200).json(contactsData)
 })
 
 export const newUser = asyncHandler(async (req, res) => {
 	const { name, username, password } = req.body
 
+	if (!name || !username || !password) {
+		res.status(400)
+		throw new Error(
+			'Did not receive all required data (missing name, username or password)'
+		)
+	}
+
 	// check if user exists
-	db.query(
-		`SELECT EXISTS (SELECT username FROM users WHERE username = \'${username}\');`,
-		(err, results) => {
-			if (err) throw err
-
-			//  create user if not one already
-			if (!Number(Object.values(results[0]))) {
-				const createUserSql = `INSERT INTO users (name, username, password) VALUES ('${name}', '${username}', '${password}');`
-
-				return db.query(createUserSql, (err) => {
-					if (err) throw err
-					//  return logged-in user data
-					const selectSql = `SELECT * FROM users WHERE username = \'${username}\';`
-
-					db.query(selectSql, (err, results) => {
-						if (err) throw err
-						const { password, ...rest } = results[0]
-						res.status(200).json(rest)
-					})
-				})
-			} else {
-				res.status(400).json({
-					message:
-						'Error: user already exists with username provided',
-				})
-			}
-		}
+	const userExists = await db.query(
+		`SELECT EXISTS (SELECT username FROM users WHERE username = \'${username}\');`
 	)
+
+	//  create user if not one already
+	if (!Object.values(userExists[0][0])[0]) {
+		const createUserSql = `INSERT INTO users (name, username, password) VALUES ('${req.body.name}', '${username}', '${password}');`
+		db.query(createUserSql)
+
+		//  return new user data
+		const selectSql = `SELECT * FROM users WHERE username = \'${username}\';`
+
+		const newUserData = await db.query(selectSql)
+		const { user_id, name, prefered_pic } = newUserData[0][0]
+		res.status(200).json({ user_id, name, prefered_pic })
+
+		//	error if trying to create a duplicate user
+	} else {
+		res.status(400)
+		throw new Error('User already exists with username provided')
+	}
 })
 
 export const loginUser = asyncHandler(async (req, res) => {
