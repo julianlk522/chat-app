@@ -14,12 +14,3 @@ html,
 #root {
   height: 100%;
 }
-
-/* My Chats */
-
-#addContactButton {
-  background-color: var(--lightGray);
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-}

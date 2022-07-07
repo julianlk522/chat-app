@@ -15,12 +15,23 @@ function MyChats() {
   const navigate = useNavigate();
 
   return (
-    <div
-      id="myChatsBody"
-      className="flex flex-col flex-grow justify-between max-w-[30%]"
-    >
-      <div id="contactsList">
-        {state.contacts ? (
+    <div id="myChatsBody" className="flex flex-col justify-between max-w-[30%]">
+      <div
+        id="contactsList"
+        className="flex flex-col justify-center items-center"
+      >
+        <div
+          id="myChatsTitleDiv"
+          className="w-full h-[10vw] flex justify-evenly items-center"
+        >
+          <h3 id="myChatsTitle" className="text-xl">
+            My Chats
+          </h3>
+          <button className="rounded-full bg-sky-600 hover:bg-sky-700 p-2 text-white">
+            <MdAdd />
+          </button>
+        </div>
+        {state.contacts.length ? (
           state.contacts.map((contact, index) => {
             return (
               <Contact

@@ -88,14 +88,12 @@ function Conversation() {
       dispatch({ type: 'SET_LOADING' });
       //  case for one deletion
       if (queuedForDeleteArray.length === 1) {
-        console.log(queuedForDeleteArray[0].toString(), 'one');
         const messagesMinusOne = await (
           await deleteMessage(currentUserId, queuedForDeleteArray[0].toString())
         ).json();
         dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne });
         //  case for multiple deletion
       } else {
-        console.log(queuedForDeleteArray.toString(), 'multiple');
         const messageMinusSeveral = await (
           await deleteMultipleMessages(
             currentUserId,
@@ -117,21 +115,24 @@ function Conversation() {
     >
       <div
         id="convoHeader"
-        className="flex justify-between items-center h-[10%] p-8"
+        className={`flex items-center h-[10%] p-8 ${
+          state?.contacts?.length ? 'justify-between' : 'justify-end'
+        }`}
       >
-        <div
-          id="recipientNameArea"
-          className="flex justify-center items-center"
-        >
-          <h3 className="text-3xl mr-4 min-w-[33%]">{selectedContactName}</h3>
+        {state.contacts.length > 0 && (
           <div
-            id="onlineStatusDot"
-            className="bg-emerald-500 inline-block w-4 h-4 rounded-full scale-75"
-          ></div>
-          <span id="typingStatus" className="mx-4">
-            typing...
-          </span>
-        </div>
+            id="recipientNameArea"
+            className="flex justify-center items-center"
+          >
+            <h3 className="text-3xl mr-4 min-w-[33%]">
+              {selectedContactName ?? ''}
+            </h3>
+
+            <span id="typingStatus" className="mx-4">
+              typing...
+            </span>
+          </div>
+        )}
 
         <div id="conversationOptions" className="flex">
           <button

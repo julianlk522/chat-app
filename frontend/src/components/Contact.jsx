@@ -17,7 +17,7 @@ function Contact({ name, id, recentMessages, prefered_pic }) {
 
   return (
     <div
-      className={`flex items-center p-4 ${
+      className={`flex justify-evenly w-full items-center p-4 ${
         selectedContact === id && 'bg-slate-200'
       }`}
       onClick={async () => {
