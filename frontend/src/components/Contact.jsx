@@ -23,12 +23,13 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
       onClick={async () => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
         await readContactMessages(userId, id);
-        const updatedRecentMessages =
-          await getUserMostRecentMessagesFromContacts(userId);
-        dispatch({
-          type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-          payload: updatedRecentMessages[0],
-        });
+        dispatch({ type: 'READ_CONTACT_MESSAGE', payload: id });
+        // const updatedRecentMessages =
+        //   await getUserMostRecentMessagesFromContacts(userId);
+        // dispatch({
+        //   type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
+        //   payload: updatedRecentMessages[0],
+        // });
         dispatch({ type: 'RESET_DELETION_CUE' });
       }}
     >

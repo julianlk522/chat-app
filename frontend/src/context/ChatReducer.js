@@ -31,8 +31,6 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         userContacts: action.payload,
-        selectedContact:
-          action.payload[0]?.user_id && action.payload[0].user_id,
         loading: false,
       };
     case 'GET_USER_MESSAGES':
@@ -46,6 +44,22 @@ const chatReducer = (state, action) => {
         ...state,
         messages: action.payload,
         loading: false,
+      };
+    case 'READ_CONTACT_MESSAGE':
+      return {
+        ...state,
+        userContacts: state.userContacts.map(userContact => {
+          return {
+            ...userContact,
+            recentMessage: {
+              ...userContact.recentMessage,
+              seen:
+                userContact.user_id === action.payload
+                  ? 1
+                  : userContact.recentMessage.seen,
+            },
+          };
+        }),
       };
     case 'CUE_FOR_DELETION':
       return {
