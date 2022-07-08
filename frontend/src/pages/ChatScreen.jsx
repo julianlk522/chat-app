@@ -27,8 +27,23 @@ function ChatScreen() {
         dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages[0] });
         //  retrieve user contacts
         const contactsData = await getUserContacts(userId);
-        if (contactsData.length > 0) {
-          dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData[0] });
+        if (contactsData[0].length > 0) {
+          dispatch({
+            type: 'GET_USER_CONTACTS',
+            payload: contactsData[0].map(contactData => {
+              return {
+                name: contactData.name,
+                user_id: contactData.user_id,
+                prefered_pic: contactData.prefered_pic,
+                recentMessage: {
+                  content: contactData.content,
+                  created_at: contactData.created_at,
+                  seen: contactData.seen,
+                  sender_id: contactData.sender_id,
+                },
+              };
+            }),
+          });
           //  retrieve recent messages from each contact
           const contactMsgData = await getUserMostRecentMessagesFromContacts(
             userId

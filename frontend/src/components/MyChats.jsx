@@ -12,7 +12,6 @@ import Select from 'react-select';
 
 function MyChats() {
   const { state, dispatch } = useContext(ChatContext);
-  const recentMessages = state.mostRecentMessages;
   const navigate = useNavigate();
 
   //  add contacts state
@@ -34,6 +33,14 @@ function MyChats() {
     };
     fetchContactsData();
   }, [dispatch, state.user?.user_id, state.userContacts]);
+
+  const handleSort = userContactArr => {
+    return userContactArr.sort((a, b) => {
+      if (a.recentMessage?.created_at > b.recentMessage?.created_at) return -1;
+      if (b.recentMessage?.created_at > a.recentMessage?.created_at) return 1;
+      else return 0;
+    });
+  };
 
   const userContactsIds = state.userContacts.map(userContact => {
     return userContact.user_id;
@@ -94,21 +101,22 @@ function MyChats() {
             }}
           />
         )}
+
         {/* contacts list */}
-        {state.userContacts.length ? (
-          state.userContacts.map((contact, index) => {
+        {state.userContacts?.length ? (
+          handleSort(state.userContacts).map((contact, idx) => {
             return (
               <Contact
+                key={idx}
                 name={contact.name}
                 id={contact.user_id}
-                recentMessages={recentMessages}
+                recentMessage={contact.recentMessage}
                 prefered_pic={contact.prefered_pic}
-                key={index}
               />
             );
           })
         ) : (
-          <p>No contacts yet</p>
+          <p>No contacts yet.</p>
         )}
       </div>
       <div

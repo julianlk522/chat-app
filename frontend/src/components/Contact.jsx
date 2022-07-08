@@ -10,7 +10,7 @@ import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
 
-function Contact({ name, id, recentMessages, prefered_pic }) {
+function Contact({ name, id, recentMessage, prefered_pic }) {
   const { state, dispatch } = useContext(ChatContext);
   const selectedContact = state.selectedContact;
   const userId = state.user.user_id;
@@ -49,35 +49,20 @@ function Contact({ name, id, recentMessages, prefered_pic }) {
         <div id="contactNameInfo">
           <h4>{name}</h4>
 
-          {recentMessages
-            .filter(message => message.name === name)
-            .map((message, index) => {
-              return (
-                <p key={index} className="text-xs font-light">
-                  {message.content}
-                </p>
-              );
-            })}
+          <p className="text-xs font-light">{recentMessage.content}</p>
         </div>
         <div id="messageAge">
-          {recentMessages
-            .filter(message => message.name === name)
-            .map((message, index) => {
-              return message.seen === 1 || message.sender_id === userId ? (
-                <p key={index} className="w-16 text-center text-xs font-light">
-                  {formatDistanceToNowStrict(new Date(message.created_at), {
-                    includeSeconds: true,
-                  })}
-                </p>
-              ) : (
-                <p
-                  key={index}
-                  className="w-16 text-center text-xs text-red-600 font-bold"
-                >
-                  NEW!
-                </p>
-              );
-            })}
+          {recentMessage.seen === 1 || recentMessage.sender_id === userId ? (
+            <p className="w-16 text-center text-xs font-light">
+              {formatDistanceToNowStrict(new Date(recentMessage.created_at), {
+                includeSeconds: true,
+              })}
+            </p>
+          ) : (
+            <p className="w-16 text-center text-xs text-red-600 font-bold">
+              NEW!
+            </p>
+          )}
         </div>
       </div>
     </div>

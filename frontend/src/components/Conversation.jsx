@@ -72,14 +72,6 @@ function Conversation() {
       newMessage
     );
     dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
-    //  update mostRecentMessages state
-    const updatedContactMsgData = await getUserMostRecentMessagesFromContacts(
-      currentUserId
-    );
-    dispatch({
-      type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-      payload: updatedContactMsgData[0],
-    });
     //  update userContacts state if needed
     if (
       !state.userContacts
@@ -89,8 +81,31 @@ function Conversation() {
         .includes(selectedContactId)
     ) {
       const contactsData = await getUserContacts(currentUserId);
-      dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData[0] });
+      dispatch({
+        type: 'GET_USER_CONTACTS',
+        payload: contactsData[0].map(contactData => {
+          return {
+            name: contactData.name,
+            user_id: contactData.user_id,
+            prefered_pic: contactData.prefered_pic,
+            recentMessage: {
+              content: contactData.content,
+              created_at: contactData.created_at,
+              seen: contactData.seen,
+              sender_id: contactData.sender_id,
+            },
+          };
+        }),
+      });
     }
+    //  update mostRecentMessages state
+    const updatedContactMsgData = await getUserMostRecentMessagesFromContacts(
+      currentUserId
+    );
+    dispatch({
+      type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
+      payload: updatedContactMsgData[0],
+    });
     setNewMessage('');
   };
 

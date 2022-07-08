@@ -42,7 +42,6 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const loginData = await loginUser(formData);
-    console.log(loginData);
     //  set localstorage
     localStorage.setItem('chatUser', JSON.stringify(loginData));
     navigate('/');
