@@ -11,10 +11,10 @@ function ContactInfo() {
   //  context
   const { state } = useContext(ChatContext);
   const selectedContactId = state.selectedContact;
-  const selectedContactName = state.contacts.filter(contact => {
+  const selectedContactName = state.contacts?.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.name;
-  const selectedContactPreferedPic = state.contacts.filter(contact => {
+  const selectedContactPreferedPic = state.contacts?.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.prefered_pic;
 
@@ -52,13 +52,7 @@ function ContactInfo() {
 
         <div id="nickname" className="px-4 flex justify-between items-center">
           {!editNickname ? (
-            <p>
-              {/* {nicknameStorage
-                ? nicknameStorage[selectedContactName]
-                :  */}
-              'The legend'
-              {/* } */}
-            </p>
+            <p>'The legend'</p>
           ) : (
             <input
               type="text"
@@ -115,7 +109,7 @@ function ContactInfo() {
       </div>
 
       <div id="timeline">
-        <h4 className="m-8 text-center">Timeline of Sneha</h4>
+        <h4 className="m-8 text-center">Timeline of {selectedContactName}</h4>
 
         <div
           id="photosContainer"

@@ -6,6 +6,7 @@ const ChatContext = createContext();
 export const ContextProvider = ({ children }) => {
   const initialState = {
     user: {},
+    userContacts: [],
     contacts: [],
     selectedContact: null,
     messages: [],

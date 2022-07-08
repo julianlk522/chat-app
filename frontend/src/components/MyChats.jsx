@@ -1,38 +1,102 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { useNavigate } from 'react-router-dom';
+import { getAllContacts } from '../context/ChatActions';
 import Contact from './Contact';
-import { FaSearch } from 'react-icons/fa';
-import { MdAdd } from 'react-icons/md';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
+import { MdAdd } from 'react-icons/md';
+import Select from 'react-select';
 
 function MyChats() {
   const { state, dispatch } = useContext(ChatContext);
   const recentMessages = state.mostRecentMessages;
   const navigate = useNavigate();
 
+  //  add contacts state
+  const [readyToInputNewContacts, setReadyToInputNewContacts] = useState(false);
+
+  //  fetch contact data on load
+  useEffect(() => {
+    const fetchContactsData = async () => {
+      const contactsData = await getAllContacts();
+      dispatch({
+        type: 'GET_ALL_CONTACTS',
+        payload: contactsData[0].filter(contact => {
+          return (
+            //  filter out user's contact data
+            contact.user_id !== state.user?.user_id
+          );
+        }),
+      });
+    };
+    fetchContactsData();
+  }, [dispatch, state.user?.user_id, state.userContacts]);
+
+  const userContactsIds = state.userContacts.map(userContact => {
+    return userContact.user_id;
+  });
+
   return (
-    <div id="myChatsBody" className="flex flex-col justify-between max-w-[30%]">
+    <div
+      id="myChatsBody"
+      className="flex flex-grow flex-col justify-between max-w-[30%]"
+    >
       <div
         id="contactsList"
         className="flex flex-col justify-center items-center"
       >
         <div
           id="myChatsTitleDiv"
-          className="w-full h-[10vw] flex justify-evenly items-center"
+          className="w-full h-[10vh] flex justify-evenly items-center"
         >
           <h3 id="myChatsTitle" className="text-xl">
             My Chats
           </h3>
-          <button className="rounded-full bg-sky-600 hover:bg-sky-700 p-2 text-white">
+          <button
+            id="addContact"
+            className="rounded-full bg-sky-600 hover:bg-sky-700 p-2 text-white"
+            onClick={e => {
+              e.preventDefault();
+              setReadyToInputNewContacts(!readyToInputNewContacts);
+            }}
+          >
             <MdAdd />
           </button>
         </div>
-        {state.contacts.length ? (
-          state.contacts.map((contact, index) => {
+
+        {/* show contacts search if selected */}
+        {readyToInputNewContacts && (
+          <Select
+            className="w-full mb-4 text-center"
+            options={state.contacts
+              //  filter out contacts with existing conversations
+              ?.filter(contact => {
+                return !userContactsIds.includes(contact.user_id);
+              })
+              //  return only contact ID and name data
+              ?.map(contact => {
+                return {
+                  value: contact.user_id,
+                  label: contact.name,
+                };
+              })}
+            closeMenuOnSelect
+            placeholder="Select a contact to add"
+            noOptionsMessage={() => 'No contacts found with specified name'}
+            onChange={e => {
+              dispatch({
+                type: 'SET_SELECTED_CONTACT',
+                payload: e.value,
+              });
+            }}
+          />
+        )}
+        {/* contacts list */}
+        {state.userContacts.length ? (
+          state.userContacts.map((contact, index) => {
             return (
               <Contact
                 name={contact.name}

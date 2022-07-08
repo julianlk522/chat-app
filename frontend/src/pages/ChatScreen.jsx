@@ -23,16 +23,16 @@ function ChatScreen() {
         const userId = JSON.parse(storage).user_id;
         dispatch({ type: 'SET_LOADING' });
         //  retrieve user messages
-        const userMessages = await (await getUserMessages(userId)).json();
+        const userMessages = await getUserMessages(userId);
         dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages[0] });
         //  retrieve user contacts
-        const contactsData = await (await getUserContacts(userId)).json();
+        const contactsData = await getUserContacts(userId);
         if (contactsData.length > 0) {
           dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData[0] });
           //  retrieve recent messages from each contact
-          const contactMsgData = await (
-            await getUserMostRecentMessagesFromContacts(userId)
-          ).json();
+          const contactMsgData = await getUserMostRecentMessagesFromContacts(
+            userId
+          );
           dispatch({
             type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
             payload: contactMsgData[0],

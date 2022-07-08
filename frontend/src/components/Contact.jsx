@@ -23,12 +23,11 @@ function Contact({ name, id, recentMessages, prefered_pic }) {
       onClick={async () => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
         await readContactMessages(userId, id);
-        const updatedRecentMessages = await (
-          await getUserMostRecentMessagesFromContacts(userId)
-        ).json();
+        const updatedRecentMessages =
+          await getUserMostRecentMessagesFromContacts(userId);
         dispatch({
           type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-          payload: updatedRecentMessages,
+          payload: updatedRecentMessages[0],
         });
         dispatch({ type: 'RESET_DELETION_CUE' });
       }}
@@ -49,6 +48,7 @@ function Contact({ name, id, recentMessages, prefered_pic }) {
       <div className="w-full flex justify-between items-center">
         <div id="contactNameInfo">
           <h4>{name}</h4>
+
           {recentMessages
             .filter(message => message.name === name)
             .map((message, index) => {

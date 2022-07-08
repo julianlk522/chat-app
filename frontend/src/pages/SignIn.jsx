@@ -41,10 +41,10 @@ function SignIn() {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
-    const login = await loginUser(formData);
-    const loginInfo = await login.json();
+    const loginData = await loginUser(formData);
+    console.log(loginData);
     //  set localstorage
-    localStorage.setItem('chatUser', JSON.stringify(loginInfo));
+    localStorage.setItem('chatUser', JSON.stringify(loginData));
     navigate('/');
   };
 

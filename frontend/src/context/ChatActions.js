@@ -13,7 +13,7 @@ export const createNewUser = async signupData => {
     body: JSON.stringify(signupData),
   });
 
-  return response;
+  return await response.json();
 };
 
 export const loginUser = async loginData => {
@@ -23,7 +23,12 @@ export const loginUser = async loginData => {
     body: JSON.stringify(loginData),
   });
 
-  return response;
+  return await response.json();
+};
+
+export const getAllContacts = async () => {
+  const response = await fetch(`${API_URL}/users`);
+  return await response.json();
 };
 
 export const getUserContacts = async userId => {
@@ -31,7 +36,7 @@ export const getUserContacts = async userId => {
     headers: paramsHeaders,
   });
 
-  return response;
+  return await response.json();
 };
 
 export const getUserMessages = async userId => {
@@ -39,7 +44,7 @@ export const getUserMessages = async userId => {
     headers: paramsHeaders,
   });
 
-  return response;
+  return await response.json();
 };
 
 export const readContactMessages = async (userId, contactId) => {
@@ -49,7 +54,7 @@ export const readContactMessages = async (userId, contactId) => {
     body: JSON.stringify({ userId, contactId }),
   });
 
-  return response;
+  return await response.json();
 };
 
 export const createNewMessage = async (userId, contactId, content) => {
@@ -63,23 +68,19 @@ export const createNewMessage = async (userId, contactId, content) => {
     }),
   });
 
-  return response;
+  return await response.json();
 };
 
 export const deleteMessage = async (userId, messageId) => {
-  try {
-    const response = await fetch(`${API_URL}/messages/delete`, {
-      method: 'DELETE',
-      headers: jsonHeaders,
-      body: JSON.stringify({
-        userId,
-        messageId,
-      }),
-    });
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await fetch(`${API_URL}/messages/delete`, {
+    method: 'DELETE',
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      userId,
+      messageId,
+    }),
+  });
+  return await response.json();
 };
 
 export const deleteMultipleMessages = async (userId, messageIdsString) => {
@@ -92,7 +93,7 @@ export const deleteMultipleMessages = async (userId, messageIdsString) => {
     }),
   });
 
-  return response;
+  return await response.json();
 };
 
 export const getUserMostRecentMessagesFromContacts = async userId => {
@@ -101,5 +102,5 @@ export const getUserMostRecentMessagesFromContacts = async userId => {
     headers: paramsHeaders,
   });
 
-  return response;
+  return await response.json();
 };

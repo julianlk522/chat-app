@@ -42,9 +42,8 @@ function SignUp() {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
     //  sign up user, retrieve new id
-    const newUser = await createNewUser(formData);
-    const newUserInfo = await newUser.json();
-    const { user_id, name, prefered_pic } = newUserInfo;
+    const newUser = await createNewUser(formData)[0];
+    const { user_id, name, prefered_pic } = newUser;
     //  set localstorage
     localStorage.setItem(
       'chatUser',

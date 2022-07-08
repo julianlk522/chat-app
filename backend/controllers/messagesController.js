@@ -110,8 +110,8 @@ export const newMessage = asyncHandler(async (req, res) => {
 
 	//	if they both exist, update messages and return the sender's new message data
 	if (
-		Object.values(userExists[0][0])[0] &&
-		Object.values(contactExists[0][0])[0]
+		Object.values(senderExists[0][0])[0] &&
+		Object.values(receiverExists[0][0])[0]
 	) {
 		const updateSql = `INSERT INTO messages (sender_id, receiver_id, content) VALUES ('${senderId}', '${receiverId}', '${content}');`
 

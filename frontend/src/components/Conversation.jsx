@@ -5,6 +5,7 @@ import {
   getUserMostRecentMessagesFromContacts,
   deleteMessage,
   deleteMultipleMessages,
+  getUserContacts,
 } from '../context/ChatActions';
 import {
   MdCall,
@@ -21,10 +22,10 @@ function Conversation() {
   const currentUserId = state.user.user_id;
   const currentUserPreferedPic = state.user.prefered_pic;
   const selectedContactId = state.selectedContact;
-  const selectedContactName = state.contacts.filter(contact => {
+  const selectedContactName = state.contacts?.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.name;
-  const selectedContactPreferedPic = state.contacts.filter(contact => {
+  const selectedContactPreferedPic = state.contacts?.filter(contact => {
     return contact.user_id === selectedContactId;
   })[0]?.prefered_pic;
   const userMessages =
@@ -64,17 +65,32 @@ function Conversation() {
   const submitMessage = async e => {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
-    const updatedMessages = await (
-      await createNewMessage(currentUserId, selectedContactId, newMessage)
-    ).json();
-    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages });
-    const updatedContactMsgData = await (
-      await getUserMostRecentMessagesFromContacts(currentUserId)
-    ).json();
+    //  update messages state
+    const updatedMessages = await createNewMessage(
+      currentUserId,
+      selectedContactId,
+      newMessage
+    );
+    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
+    //  update mostRecentMessages state
+    const updatedContactMsgData = await getUserMostRecentMessagesFromContacts(
+      currentUserId
+    );
     dispatch({
       type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-      payload: updatedContactMsgData,
+      payload: updatedContactMsgData[0],
     });
+    //  update userContacts state if needed
+    if (
+      !state.userContacts
+        .map(userContact => {
+          return userContact.user_id;
+        })
+        .includes(selectedContactId)
+    ) {
+      const contactsData = await getUserContacts(currentUserId);
+      dispatch({ type: 'GET_USER_CONTACTS', payload: contactsData[0] });
+    }
     setNewMessage('');
   };
 
@@ -88,21 +104,20 @@ function Conversation() {
       dispatch({ type: 'SET_LOADING' });
       //  case for one deletion
       if (queuedForDeleteArray.length === 1) {
-        const messagesMinusOne = await (
-          await deleteMessage(currentUserId, queuedForDeleteArray[0].toString())
-        ).json();
-        dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne });
+        const messagesMinusOne = await deleteMessage(
+          currentUserId,
+          queuedForDeleteArray[0].toString()
+        );
+        dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne[0] });
         //  case for multiple deletion
       } else {
-        const messageMinusSeveral = await (
-          await deleteMultipleMessages(
-            currentUserId,
-            queuedForDeleteArray.toString()
-          )
-        ).json();
+        const messageMinusSeveral = await deleteMultipleMessages(
+          currentUserId,
+          queuedForDeleteArray.toString()
+        );
         dispatch({
           type: 'DELETE_MESSAGE',
-          payload: messageMinusSeveral,
+          payload: messageMinusSeveral[0],
         });
       }
     } else return;
@@ -119,7 +134,7 @@ function Conversation() {
           state?.contacts?.length ? 'justify-between' : 'justify-end'
         }`}
       >
-        {state.contacts.length > 0 && (
+        {state.userContacts.length > 0 && (
           <div
             id="recipientNameArea"
             className="flex justify-center items-center"

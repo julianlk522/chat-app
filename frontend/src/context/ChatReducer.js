@@ -14,17 +14,23 @@ const chatReducer = (state, action) => {
     case 'LOGOUT_USER':
       return {
         user: {},
-        contacts: [],
+        userContacts: [],
         selectedContact: null,
         messages: [],
         mostRecentMessages: [],
         queuedForDelete: [],
         loading: false,
       };
-    case 'GET_USER_CONTACTS':
+    case 'GET_ALL_CONTACTS':
       return {
         ...state,
         contacts: action.payload,
+        loading: false,
+      };
+    case 'GET_USER_CONTACTS':
+      return {
+        ...state,
+        userContacts: action.payload,
         selectedContact:
           action.payload[0]?.user_id && action.payload[0].user_id,
         loading: false,
