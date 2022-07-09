@@ -28,8 +28,6 @@ const chatReducer = (state, action) => {
         loading: false,
       };
     case 'GET_USER_CONTACTS':
-      console.log(action.payload);
-      console.log(state.userContacts);
       return {
         ...state,
         userContacts: action.payload,

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
   createNewMessage,
@@ -92,6 +92,7 @@ function Conversation() {
       }),
     });
     setNewMessage('');
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   //  delete message(s)
@@ -122,6 +123,9 @@ function Conversation() {
       }
     } else return;
   };
+
+  //  reference for allowing new messages to be scrolled into view
+  const scrollRef = useRef(null);
 
   return (
     <div
@@ -175,7 +179,7 @@ function Conversation() {
         </div>
       </div>
 
-      <div id="conversationBody" className="h-4/5">
+      <div id="conversationBody" className="h-4/5 overflow-y-scroll">
         {userMessages &&
           userMessages.map((message, index) => {
             return (
@@ -192,6 +196,7 @@ function Conversation() {
               />
             );
           })}
+        <div id="scrollRefDiv" ref={scrollRef}></div>
       </div>
 
       <div
