@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
   readContactMessages,
@@ -15,17 +15,10 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
   const selectedContact = state.selectedContact ?? '';
   const userId = state.user.user_id;
 
-  //  currently selected state
-  const [selected, setSelected] = useState(false);
-
-  useEffect(() => {
-    setSelected(selectedContact);
-  }, [selectedContact]);
-
   return (
     <div
       className={`flex justify-evenly w-full items-center p-4 ${
-        selected === id && 'bg-slate-200'
+        selectedContact === id && 'bg-slate-200'
       }`}
       onClick={async () => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
