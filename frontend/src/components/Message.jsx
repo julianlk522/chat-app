@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
-import { RiGhostSmileFill, RiGhostSmileLine, TiDelete } from 'react-icons/ri';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';

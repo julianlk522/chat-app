@@ -28,9 +28,21 @@ const chatReducer = (state, action) => {
         loading: false,
       };
     case 'GET_USER_CONTACTS':
+      console.log(action.payload);
+      console.log(state.userContacts);
       return {
         ...state,
         userContacts: action.payload,
+        selectedContact:
+          action.payload.length === state.userContacts.length
+            ? action.payload.sort((a, b) => {
+                if (a.recentMessage?.created_at > b.recentMessage?.created_at)
+                  return -1;
+                if (b.recentMessage?.created_at > a.recentMessage?.created_at)
+                  return 1;
+                else return 0;
+              })[0].user_id
+            : state.selectedContact,
         loading: false,
       };
     case 'GET_USER_MESSAGES':

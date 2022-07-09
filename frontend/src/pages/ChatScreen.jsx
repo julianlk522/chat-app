@@ -44,14 +44,13 @@ function ChatScreen() {
               };
             }),
           });
-          //  retrieve recent messages from each contact
-          const contactMsgData = await getUserMostRecentMessagesFromContacts(
-            userId
-          );
-          dispatch({
-            type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-            payload: contactMsgData[0],
-          });
+          // //  retrieve recent messages from each contact
+          // const contactMsgData = await getUserMostRecentMessagesFromContacts(
+          //   userId)
+          // dispatch({
+          //   type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
+          //   payload: contactMsgData[0],
+          // });
         }
       } else {
         navigate('/sign-up');

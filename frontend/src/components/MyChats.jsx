@@ -8,6 +8,7 @@ import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
 import { MdAdd } from 'react-icons/md';
+import { FiMinus } from 'react-icons/fi';
 import Select from 'react-select';
 
 function MyChats() {
@@ -34,6 +35,7 @@ function MyChats() {
     fetchContactsData();
   }, [dispatch, state.user?.user_id, state.userContacts]);
 
+  //  sort contacts based on recentMessage age
   const handleSort = userContactArr => {
     return userContactArr.sort((a, b) => {
       if (a.recentMessage?.created_at > b.recentMessage?.created_at) return -1;
@@ -64,13 +66,17 @@ function MyChats() {
           </h3>
           <button
             id="addContact"
-            className="rounded-full bg-sky-600 hover:bg-sky-700 p-2 text-white"
+            className={`rounded-full p-2 text-white ${
+              !readyToInputNewContacts
+                ? 'bg-sky-600 hover:bg-sky-700'
+                : 'bg-red-600 hover:bg-red-700'
+            }`}
             onClick={e => {
               e.preventDefault();
               setReadyToInputNewContacts(!readyToInputNewContacts);
             }}
           >
-            <MdAdd />
+            {readyToInputNewContacts ? <FiMinus /> : <MdAdd />}
           </button>
         </div>
 
