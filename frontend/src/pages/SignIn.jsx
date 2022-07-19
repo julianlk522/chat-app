@@ -2,10 +2,16 @@ import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { loginUser } from '../context/ChatActions';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { FaArrowRight } from 'react-icons/fa';
 import visibilityIcon from '../assets/visibilityIcon.svg';
 
 function SignIn() {
+  const toastOptions = {
+    autoClose: 4000,
+    position: toast.POSITION.BOTTOM_RIGHT,
+  };
+
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -42,9 +48,15 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const loginData = await loginUser(formData);
-    //  set localstorage
-    localStorage.setItem('chatUser', JSON.stringify(loginData));
-    navigate('/');
+    console.log(loginData);
+    //  if error show user a toast
+    if (loginData.error) {
+      toast.error(`Error: ${loginData.error}`, toastOptions);
+    } //  set localstorage if successful login
+    else {
+      localStorage.setItem('chatUser', JSON.stringify(loginData));
+      navigate('/');
+    }
   };
 
   return (

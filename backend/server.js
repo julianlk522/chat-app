@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import express from 'express'
 import { errorHandler } from './middleware/errorMiddleware.js'
 import cors from 'cors'
@@ -11,6 +10,7 @@ const PORT = process.env.PORT
 db.connect((err) => {
 	if (err) {
 		console.log(err)
+		console.log(process.env.mySqlPassword)
 		return
 	}
 

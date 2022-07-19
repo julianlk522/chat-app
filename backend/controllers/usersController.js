@@ -55,9 +55,11 @@ export const loginUser = asyncHandler(async (req, res) => {
 	const { username, password } = req.body
 
 	if (!username || !password) {
-		res.status(400)
+		res.status(400).json({
+			error: 'Did not receive all required data (missing username or password',
+		})
 		throw new Error(
-			'Did not receive all required data (missing username or password)'
+			'Did not receive all required data (missing username or password).'
 		)
 	}
 
@@ -82,11 +84,13 @@ export const loginUser = asyncHandler(async (req, res) => {
 			const { user_id, name, prefered_pic } = userData[0][0]
 			res.status(200).json({ user_id, name, prefered_pic })
 		} else {
-			res.status(400)
+			res.status(400).json({ error: 'Invalid password provided.' })
 			throw new Error('Invalid password provided: access denied.')
 		}
 	} else {
-		res.status(400)
-		throw new Error('No user found with login credentials provided')
+		res.status(400).json({
+			error: 'No user found with login credentials provided',
+		})
+		throw new Error('No user found with login credentials provided.')
 	}
 })
