@@ -22,6 +22,8 @@ function Conversation() {
     position: toast.POSITION.BOTTOM_RIGHT,
   };
 
+  const scrollRef = useRef(null);
+
   //  context (user, messages, selectedContact, queuedForDelete)
   const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
@@ -43,15 +45,26 @@ function Conversation() {
         })
       : [];
   const queuedForDeleteArray = state.queuedForDelete;
-  //  confirm delete message state
+
+  //  local state
+  const [randomlyOnline, setRandomlyOnline] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  //  newMessage state
   const [newMessage, setNewMessage] = useState('');
-  //  editMode state
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     setEditMode(false);
+  }, [selectedContactId]);
+
+  useEffect(() => {
+    const randomlyAssignOnlineStatus = () => {
+      //  for demonstration, we assume there is an 80% chance a contact is online
+      const onlineScore = Math.random();
+      console.log('online score: ', onlineScore);
+      if (onlineScore > 0.2) setRandomlyOnline(true);
+      else setRandomlyOnline(false);
+    };
+    randomlyAssignOnlineStatus();
   }, [selectedContactId]);
 
   //  change newMessage state to user input unless there are quote characters
@@ -70,8 +83,7 @@ function Conversation() {
   };
 
   //  create new message
-  const submitMessage = async e => {
-    e.preventDefault();
+  const submitMessage = async () => {
     dispatch({ type: 'SET_LOADING' });
     //  update messages state
     const updatedMessages = await createNewMessage(
@@ -132,9 +144,6 @@ function Conversation() {
     } else return;
   };
 
-  //  reference for allowing new messages to be scrolled into view
-  const scrollRef = useRef(null);
-
   return (
     <div
       id="conversation"
@@ -155,9 +164,20 @@ function Conversation() {
               {selectedContactName ?? ''}
             </h3>
 
-            <span id="typingStatus" className="mx-4">
-              typing...
-            </span>
+            {randomlyOnline && (
+              <div
+                id="infoIfContactOnlineDiv"
+                className="flex justify-center items-center"
+              >
+                <div
+                  id="onlineStatus"
+                  className="w-4 h-4 mx-4 rounded-full bg-lime-500"
+                ></div>
+                <span id="typingStatus" className="mx-4">
+                  typing...
+                </span>
+              </div>
+            )}
           </div>
         )}
 
@@ -217,6 +237,9 @@ function Conversation() {
           placeholder="Type something to send..."
           autoComplete="off"
           onChange={onNewMessageChange}
+          onKeyDown={e => {
+            if (newMessage.length && e.key === 'Enter') submitMessage();
+          }}
           id="typingAreaInputBox"
           className="w-full mr-8 px-4 outline-slate-200 rounded-xl"
         />
