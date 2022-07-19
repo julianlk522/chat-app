@@ -41,6 +41,7 @@ function ChatScreen() {
                   seen: contactData.seen,
                   sender_id: contactData.sender_id,
                 },
+                last_active: contactData.last_active,
               };
             }),
           });

@@ -7,6 +7,7 @@ import {
   getUserContacts,
 } from '../context/ChatActions';
 import { toast } from 'react-toastify';
+import { formatDistanceToNowStrict } from 'date-fns';
 import {
   MdCall,
   MdVideoCall,
@@ -28,14 +29,18 @@ function Conversation() {
   const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
   const currentUserPreferedPic = state.user.prefered_pic;
-  const selectedContactId = state.selectedContact;
-  const selectedContactName = state.contacts?.filter(contact => {
-    return contact.user_id === selectedContactId;
-  })[0]?.name;
-  const selectedContactPreferedPic = state.contacts?.filter(contact => {
-    return contact.user_id === selectedContactId;
-  })[0]?.prefered_pic;
-  const userMessages =
+
+  const selectedContact = state.userContacts.filter(contact => {
+    return contact.user_id === state.selectedContact;
+  })[0];
+  const {
+    name: selectedContactName,
+    user_id: selectedContactId,
+    prefered_pic: selectedContactPreferedPic,
+    last_active: selectedContactLastActive,
+  } = selectedContact;
+
+  const selectedContactMessages =
     state.messages && state.messages.length > 0
       ? state?.messages?.filter(message => {
           return (
@@ -60,7 +65,6 @@ function Conversation() {
     const randomlyAssignOnlineStatus = () => {
       //  for demonstration, we assume there is an 80% chance a contact is online
       const onlineScore = Math.random();
-      console.log('online score: ', onlineScore);
       if (onlineScore > 0.2) setRandomlyOnline(true);
       else setRandomlyOnline(false);
     };
@@ -108,6 +112,7 @@ function Conversation() {
             seen: contactData.seen,
             sender_id: contactData.sender_id,
           },
+          last_active: contactData.last_active,
         };
       }),
     });
@@ -164,7 +169,7 @@ function Conversation() {
               {selectedContactName ?? ''}
             </h3>
 
-            {randomlyOnline && (
+            {randomlyOnline ? (
               <div
                 id="infoIfContactOnlineDiv"
                 className="flex justify-center items-center"
@@ -177,6 +182,16 @@ function Conversation() {
                   typing...
                 </span>
               </div>
+            ) : (
+              <h3 id="lastActive" className="text-sm">
+                last active:
+                <span id="formattedLastActive" className="mx-2">
+                  {formatDistanceToNowStrict(
+                    new Date(selectedContactLastActive)
+                  )}{' '}
+                  ago
+                </span>
+              </h3>
             )}
           </div>
         )}
@@ -208,8 +223,8 @@ function Conversation() {
       </div>
 
       <div id="conversationBody" className="h-4/5 overflow-y-scroll">
-        {userMessages &&
-          userMessages.map((message, index) => {
+        {selectedContactMessages &&
+          selectedContactMessages.map((message, index) => {
             return (
               <Message
                 messageId={message.message_id}

@@ -113,9 +113,13 @@ export const newMessage = asyncHandler(async (req, res) => {
 		Object.values(senderExists[0][0])[0] &&
 		Object.values(receiverExists[0][0])[0]
 	) {
-		const updateSql = `INSERT INTO messages (sender_id, receiver_id, content) VALUES ('${senderId}', '${receiverId}', '${content}');`
+		const updateMessagesSql = `INSERT INTO messages (sender_id, receiver_id, content) VALUES ('${senderId}', '${receiverId}', '${content}');`
 
-		db.query(updateSql)
+		db.query(updateMessagesSql)
+
+		const updatedLastActiveSql = `UPDATE users SET last_active = CURRENT_TIMESTAMP() WHERE user_id = ${senderId};`
+
+		db.query(updatedLastActiveSql)
 
 		const selectUpdatedMessagesSql = `SELECT * FROM messages WHERE sender_id = ${senderId} OR receiver_id = ${senderId};`
 
