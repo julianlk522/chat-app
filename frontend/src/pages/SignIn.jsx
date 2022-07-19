@@ -48,7 +48,6 @@ function SignIn() {
     dispatch({ type: 'SET_LOADING' });
     //  log in user, retrieve id
     const loginData = await loginUser(formData);
-    console.log(loginData);
     //  if error show user a toast
     if (loginData.error) {
       toast.error(`Error: ${loginData.error}`, toastOptions);

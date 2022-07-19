@@ -2,11 +2,11 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
   createNewMessage,
-  getUserMostRecentMessagesFromContacts,
   deleteMessage,
   deleteMultipleMessages,
   getUserContacts,
 } from '../context/ChatActions';
+import { toast } from 'react-toastify';
 import {
   MdCall,
   MdVideoCall,
@@ -17,6 +17,11 @@ import {
 import Message from './Message';
 
 function Conversation() {
+  const toastOptions = {
+    autoClose: 4000,
+    position: toast.POSITION.BOTTOM_RIGHT,
+  };
+
   //  context (user, messages, selectedContact, queuedForDelete)
   const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
@@ -55,7 +60,10 @@ function Conversation() {
       e.target.value.indexOf('"') !== -1 ||
       e.target.value.indexOf("'") !== -1
     ) {
-      console.log('no quote characters allowed!');
+      toast.error(
+        'Sorry, no quote characters allowed in your message!',
+        toastOptions
+      );
       return;
     }
     setNewMessage(e.target.value);
