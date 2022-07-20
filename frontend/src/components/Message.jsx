@@ -42,7 +42,7 @@ function Message({
             alt="profile pic"
             className="rounded-full h-8 w-8 mx-4 object-cover"
           />
-          <div className="p-4 my-4 bg-slate-200 rounded-2xl break-words">
+          <div className="p-4 my-4 mr-4 bg-slate-200 rounded-2xl break-words">
             <p>{content}</p>
           </div>
         </div>

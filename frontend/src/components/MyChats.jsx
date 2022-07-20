@@ -109,21 +109,26 @@ function MyChats() {
         )}
 
         {/* contacts list */}
-        {state.userContacts?.length ? (
-          handleSort(state.userContacts).map((contact, idx) => {
-            return (
-              <Contact
-                key={idx}
-                name={contact.name}
-                id={contact.user_id}
-                recentMessage={contact.recentMessage}
-                prefered_pic={contact.prefered_pic}
-              />
-            );
-          })
-        ) : (
-          <p>No contacts yet.</p>
-        )}
+        <div
+          id="contactsList"
+          onClick={() => setReadyToInputNewContacts(false)}
+        >
+          {state.userContacts?.length ? (
+            handleSort(state.userContacts).map((contact, idx) => {
+              return (
+                <Contact
+                  key={idx}
+                  name={contact.name}
+                  id={contact.user_id}
+                  recentMessage={contact.recentMessage}
+                  prefered_pic={contact.prefered_pic}
+                />
+              );
+            })
+          ) : (
+            <p>No contacts yet.</p>
+          )}{' '}
+        </div>
       </div>
       <div
         id="userProfileArea"

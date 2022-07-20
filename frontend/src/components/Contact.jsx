@@ -1,9 +1,6 @@
 import React, { useContext } from 'react';
 import ChatContext from '../context/ChatContext';
-import {
-  readContactMessages,
-  getUserMostRecentMessagesFromContacts,
-} from '../context/ChatActions';
+import { readContactMessages } from '../context/ChatActions';
 import { formatDistanceToNowStrict } from 'date-fns';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
@@ -24,12 +21,6 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
         await readContactMessages(userId, id);
         dispatch({ type: 'READ_CONTACT_MESSAGE', payload: id });
-        // const updatedRecentMessages =
-        //   await getUserMostRecentMessagesFromContacts(userId);
-        // dispatch({
-        //   type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-        //   payload: updatedRecentMessages[0],
-        // });
         dispatch({ type: 'RESET_DELETION_CUE' });
       }}
     >
