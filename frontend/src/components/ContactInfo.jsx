@@ -8,20 +8,19 @@ import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
 import { useEffect } from 'react';
+import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
 
 function ContactInfo() {
   //  context
   const { state, dispatch } = useContext(ChatContext);
   const userId = state?.user?.user_id;
-  const selectedContact = state.userContacts.filter(contact => {
-    return contact.user_id === state.selectedContact;
-  })[0];
-  const selectedContactName = selectedContact?.name;
   const selectedContactId = state.selectedContact;
-  const selectedContactPreferedPic = selectedContact?.prefered_pic;
-  const selectedContactNickname = state?.nicknames?.filter(nickname => {
-    return nickname.contact_id === selectedContactId;
-  })[0]?.nickname;
+
+  const {
+    selectedContactName,
+    selectedContactNickname,
+    selectedContactPreferedPic,
+  } = useSelectedContactInfo();
 
   //  local state
   const [editNickname, setEditNickname] = useState(false);
@@ -66,9 +65,12 @@ function ContactInfo() {
       <div id="nicknameArea" className="text-center">
         <h3 className="m-4">{selectedContactName ?? ''}</h3>
 
-        <div id="nickname" className="px-4 flex justify-between items-center">
+        <div
+          id="nickname"
+          className="px-4 flex justify-between lg:justify-evenly items-center"
+        >
           {!editNickname ? (
-            <p className="font-bold">
+            <p className="font-bold text-2xl">
               {selectedContactNickname ? selectedContactNickname : 'The legend'}
             </p>
           ) : (
@@ -78,7 +80,7 @@ function ContactInfo() {
               placeholder="new nickname..."
               value={newNickname}
               onChange={e => setNewNickname(e.target.value)}
-              className="border-2 border-solid border-slate-200 rounded-2xl text-center"
+              className="border-2 border-solid border-slate-200 rounded-2xl text-center xl:w-[75%]"
             />
           )}
           <button

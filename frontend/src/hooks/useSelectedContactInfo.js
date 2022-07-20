@@ -25,7 +25,8 @@ export const useSelectedContactInfo = () => {
     } else {
       setSelectedContact(null);
     }
-  }, [selectedContactId, state.nicknames]);
+    //  eslint-disable-next-line
+  }, [selectedContactId]);
 
   //  update selectedContact info with changes to selectedContact
   useEffect(() => {
@@ -57,10 +58,9 @@ export const useSelectedContactInfo = () => {
       setSelectedContactLastActive(null);
     }
     //  eslint-disable-next-line
-  }, [selectedContact, state.messages]);
+  }, [selectedContact, state.messages, state.nicknames]);
 
   return {
-    selectedContact,
     selectedContactMessages,
     selectedContactName,
     selectedContactNickname,

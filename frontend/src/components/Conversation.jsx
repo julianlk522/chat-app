@@ -152,19 +152,18 @@ function Conversation() {
         }`}
       >
         {state.userContacts.length > 0 && (
-          <div
-            id="recipientNameArea"
-            className="flex justify-center items-center"
-          >
-            <h3 className="text-3xl mr-4 min-w-[33%]">
+          <div id="recipientNameArea" className="flex flex-grow items-center">
+            <h3 className="text-3xl mr-4">
               {selectedContactNickname
                 ? selectedContactNickname
                 : selectedContactName
                 ? selectedContactName
-                : ''}
+                : state?.contacts?.filter(contact => {
+                    return contact.user_id === selectedContactId;
+                  })[0]?.name ?? ''}
             </h3>
 
-            {randomlyOnline ? (
+            {selectedContactLastActive && randomlyOnline ? (
               <div
                 id="infoIfContactOnlineDiv"
                 className="flex justify-center items-center"
@@ -178,12 +177,14 @@ function Conversation() {
                 </span>
               </div>
             ) : (
-              <h3 id="lastActive" className="text-xs">
+              <h3 id="lastActive" className="text-sm mx-4">
                 last active:
                 <span id="formattedLastActive" className="mx-2">
-                  {formatDistanceToNowStrict(
-                    new Date(selectedContactLastActive)
-                  ) ?? ''}{' '}
+                  {selectedContactLastActive
+                    ? formatDistanceToNowStrict(
+                        new Date(selectedContactLastActive)
+                      ) + ' '
+                    : '2 hours '}
                   ago
                 </span>
               </h3>
