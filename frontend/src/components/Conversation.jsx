@@ -25,7 +25,7 @@ function Conversation() {
 
   const scrollRef = useRef(null);
 
-  //  context (user, messages, selectedContact, queuedForDelete)
+  //  context
   const { state, dispatch } = useContext(ChatContext);
   const currentUserId = state.user.user_id;
   const currentUserPreferedPic = state.user.prefered_pic;
@@ -33,13 +33,10 @@ function Conversation() {
   const selectedContact = state.userContacts.filter(contact => {
     return contact.user_id === state.selectedContact;
   })[0];
-  const {
-    name: selectedContactName,
-    user_id: selectedContactId,
-    prefered_pic: selectedContactPreferedPic,
-    last_active: selectedContactLastActive,
-  } = selectedContact;
-
+  const selectedContactName = selectedContact?.name;
+  const selectedContactId = selectedContact?.user_id;
+  const selectedContactPreferedPic = selectedContact?.prefered_pic;
+  const selectedContactLastActive = selectedContact?.last_active;
   const selectedContactMessages =
     state.messages && state.messages.length > 0
       ? state?.messages?.filter(message => {

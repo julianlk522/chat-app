@@ -94,3 +94,44 @@ export const loginUser = asyncHandler(async (req, res) => {
 		throw new Error('No user found with login credentials provided.')
 	}
 })
+
+export const assignNewNickname = asyncHandler(async (req, res) => {
+	const { user_id, contact_id, nickname } = req.body
+
+	if (!user_id || !contact_id || !nickname) {
+		res.status(400).json({
+			error: 'Did not receive all required data (missing userId, contactId or nickname to be set.',
+		})
+		throw new Error(
+			'Did not receive all required data (missing userId, contactId or nickname to be set.'
+		)
+	}
+
+	//	check if the assigner has already assigned the contact a name, if so replace it
+
+	const searchNicknamesSql = `SELECT * FROM nicknames WHERE assigner_id = ${user_id} AND contact_id = ${contact_id}`
+
+	const nicknameSearchResponse = await db.query(searchNicknamesSql)
+
+	if (nicknameSearchResponse[0][0] === undefined) {
+		//	no nicknames, add one
+		const newNicknameSql = `INSERT INTO nicknames (assigner_id, contact_id, nickname) VALUES (${user_id}, ${contact_id}, '${nickname}');`
+
+		db.query(newNicknameSql)
+		console.log('new nickname')
+	} else {
+		//	existing nickname, overwrite it
+		const overWriteNicknameSql = `UPDATE nicknames SET nickname = '${nickname}' WHERE assigner_id = ${user_id} AND contact_id = ${contact_id}`
+
+		db.query(overWriteNicknameSql)
+		console.log('nickname overwritten')
+	}
+
+	//	return new nickname json
+	const selectNewNicknameSql = `SELECT * FROM nicknames WHERE assigner_id = ${user_id} AND contact_id = ${contact_id};`
+
+	const newNicknameResponse = await db.query(selectNewNicknameSql)
+	const newNicknameResponseData = newNicknameResponse[0][0]
+
+	res.status(200).json({ newNicknameResponseData })
+})

@@ -11,6 +11,7 @@ export const ContextProvider = ({ children }) => {
     selectedContact: null,
     messages: [],
     mostRecentMessages: [],
+    nicknames: [],
     queuedForDelete: [],
     loading: false,
   };

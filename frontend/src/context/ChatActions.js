@@ -57,6 +57,16 @@ export const readContactMessages = async (userId, contactId) => {
   return await response.json();
 };
 
+export const assignNewNickname = async nickNameData => {
+  const response = await fetch(`${API_URL}/users/new-nickname`, {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(nickNameData),
+  });
+
+  return await response.json();
+};
+
 export const createNewMessage = async (userId, contactId, content) => {
   const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',

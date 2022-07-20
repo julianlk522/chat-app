@@ -1,33 +1,46 @@
 import React, { useState, useContext } from 'react';
 import ChatContext from '../context/ChatContext';
+import { assignNewNickname } from '../context/ChatActions';
 import { RiGhostSmileLine } from 'react-icons/ri';
 import { FiEdit2, FiCheckCircle } from 'react-icons/fi';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
+import { useEffect } from 'react';
 
 function ContactInfo() {
   //  context
-  const { state } = useContext(ChatContext);
-  const selectedContactId = state.selectedContact;
-  const selectedContactName = state.contacts?.filter(contact => {
-    return contact.user_id === selectedContactId;
-  })[0]?.name;
-  const selectedContactPreferedPic = state.contacts?.filter(contact => {
-    return contact.user_id === selectedContactId;
-  })[0]?.prefered_pic;
+  const { state, dispatch } = useContext(ChatContext);
+  const userId = state?.user?.user_id;
+  const selectedContact = state.userContacts.filter(contact => {
+    return contact.user_id === state.selectedContact;
+  })[0];
+  const selectedContactName = selectedContact?.name;
+  const selectedContactId = selectedContact?.user_id;
+  const selectedContactPreferedPic = selectedContact?.prefered_pic;
 
-  //  editNickname state
+  //  local state
   const [editNickname, setEditNickname] = useState(false);
-
-  //  newNickname state
   const [newNickname, setNewNickname] = useState('');
+  const [nicknameReadyToSubmit, setNicknameReadyToSubmit] = useState(false);
 
-  //  nickname data from localstorage
-  // let nicknameStorage;
-  // nicknameStorage = JSON.parse(localStorage.getItem('nicknames'));
-  // console.log(nicknameStorage);
+  useEffect(() => {
+    if (newNickname.length >= 4) setNicknameReadyToSubmit(true);
+    else setNicknameReadyToSubmit(false);
+  }, [newNickname.length]);
+
+  const handleNicknameSubmit = async () => {
+    const newNickNameData = {
+      user_id: userId ?? null,
+      contact_id: selectedContactId ?? null,
+      nickname: newNickname,
+    };
+    // console.log(newNickNameData);
+    const newNickNameResponse = await assignNewNickname(newNickNameData);
+    console.log(newNickNameResponse);
+    dispatch({ type: 'ASSIGN_NEW_NICKNAME', payload: newNickNameResponse });
+  };
 
   return (
     <div id="contactInfo" className="w-1/4 p-4 flex flex-col">
@@ -48,7 +61,7 @@ function ContactInfo() {
       </div>
 
       <div id="nicknameArea" className="text-center">
-        <h3 className="m-4">{selectedContactName}</h3>
+        <h3 className="m-4">{selectedContactName ?? ''}</h3>
 
         <div id="nickname" className="px-4 flex justify-between items-center">
           {!editNickname ? (
@@ -65,28 +78,23 @@ function ContactInfo() {
           )}
           <button
             id="editNicknameIcon"
-            className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white self-center"
+            className={`py-2 rounded-full text-white self-center ${
+              editNickname
+                ? nicknameReadyToSubmit
+                  ? 'bg-lime-500'
+                  : 'bg-red-600 hover:bg-red-700'
+                : 'bg-sky-600 hover:bg-sky-700'
+            }`}
             onClick={() => {
-              if (newNickname.length <= 4) {
-                setEditNickname(!editNickname);
-                setNewNickname('');
-              } else {
-                localStorage.setItem(
-                  'nicknames',
-                  JSON.stringify({
-                    // ...nicknameStorage,
-                    [selectedContactName]: newNickname,
-                  })
-                );
-                setEditNickname(!editNickname);
-                setNewNickname('');
-              }
+              nicknameReadyToSubmit && handleNicknameSubmit();
+              setEditNickname(!editNickname);
+              setNewNickname('');
             }}
           >
-            {newNickname.length <= 4 ? (
-              <FiEdit2 className="mx-2" />
-            ) : (
+            {nicknameReadyToSubmit ? (
               <FiCheckCircle className="mx-2" />
+            ) : (
+              <FiEdit2 className="mx-2" />
             )}
           </button>
         </div>
@@ -109,7 +117,9 @@ function ContactInfo() {
       </div>
 
       <div id="timeline">
-        <h4 className="m-8 text-center">Timeline of {selectedContactName}</h4>
+        <h4 className="m-8 text-center">
+          Timeline of {selectedContactName ?? ''}
+        </h4>
 
         <div
           id="photosContainer"

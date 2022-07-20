@@ -49,6 +49,14 @@ const chatReducer = (state, action) => {
         messages: action.payload,
         loading: false,
       };
+    case 'ASSIGN_NEW_NICKNAME':
+      return {
+        ...state,
+        nicknames: state.nicknames.concat(
+          action.payload.newNicknameResponseData
+        ),
+        loading: false,
+      };
     case 'NEW_MESSAGE':
       return {
         ...state,
