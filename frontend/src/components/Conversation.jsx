@@ -180,7 +180,7 @@ function Conversation() {
                 </span>
               </div>
             ) : (
-              <h3 id="lastActive" className="text-sm">
+              <h3 id="lastActive" className="text-xs">
                 last active:
                 <span id="formattedLastActive" className="mx-2">
                   {formatDistanceToNowStrict(

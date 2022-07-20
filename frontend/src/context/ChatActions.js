@@ -39,6 +39,14 @@ export const getUserContacts = async userId => {
   return await response.json();
 };
 
+export const getUserNicknames = async userId => {
+  const response = await fetch(`${API_URL}/users/${userId}/nicknames`, {
+    headers: paramsHeaders,
+  });
+
+  return await response.json();
+};
+
 export const getUserMessages = async userId => {
   const response = await fetch(`${API_URL}/messages/${userId}`, {
     headers: paramsHeaders,

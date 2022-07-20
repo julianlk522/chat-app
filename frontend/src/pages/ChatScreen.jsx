@@ -3,7 +3,7 @@ import ChatContext from '../context/ChatContext';
 import {
   getUserMessages,
   getUserContacts,
-  getUserMostRecentMessagesFromContacts,
+  getUserNicknames,
 } from '../context/ChatActions';
 import MyChats from '../components/MyChats';
 import Conversation from '../components/Conversation';
@@ -23,8 +23,8 @@ function ChatScreen() {
         const userId = JSON.parse(storage).user_id;
         dispatch({ type: 'SET_LOADING' });
         //  retrieve user messages
-        const userMessages = await getUserMessages(userId);
-        dispatch({ type: 'GET_USER_MESSAGES', payload: userMessages[0] });
+        const messagesData = await getUserMessages(userId);
+        dispatch({ type: 'GET_USER_MESSAGES', payload: messagesData[0] });
         //  retrieve user contacts
         const contactsData = await getUserContacts(userId);
         if (contactsData[0].length > 0) {
@@ -45,14 +45,10 @@ function ChatScreen() {
               };
             }),
           });
-          // //  retrieve recent messages from each contact
-          // const contactMsgData = await getUserMostRecentMessagesFromContacts(
-          //   userId)
-          // dispatch({
-          //   type: 'GET_RECENT_MESSAGES_FROM_CONTACTS',
-          //   payload: contactMsgData[0],
-          // });
         }
+        //  retrieve contact nicknames
+        const nicknamesData = await getUserNicknames(userId);
+        dispatch({ type: 'GET_CONTACT_NICKNAMES', payload: nicknamesData });
       } else {
         navigate('/sign-up');
       }

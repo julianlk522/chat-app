@@ -49,12 +49,24 @@ const chatReducer = (state, action) => {
         messages: action.payload,
         loading: false,
       };
+    case 'GET_CONTACT_NICKNAMES':
+      return {
+        ...state,
+        nicknames: action.payload,
+        loading: false,
+      };
     case 'ASSIGN_NEW_NICKNAME':
       return {
         ...state,
-        nicknames: state.nicknames.concat(
-          action.payload.newNicknameResponseData
-        ),
+        nicknames: state.nicknames.map(nickname => {
+          return nickname.assigner_id ===
+            action.payload.newNicknameResponseData.assigner_id &&
+            nickname.contact_id ===
+              action.payload.newNicknameResponseData.contact_id
+            ? action.payload.newNicknameResponseData
+            : nickname;
+        }),
+        // action.payload.newNicknameResponseData
         loading: false,
       };
     case 'NEW_MESSAGE':

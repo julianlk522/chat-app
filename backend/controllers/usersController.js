@@ -95,6 +95,20 @@ export const loginUser = asyncHandler(async (req, res) => {
 	}
 })
 
+export const getUserNicknames = asyncHandler(async (req, res) => {
+	if (!req.params.userId) {
+		res.status(400).json({ error: 'No user ID provided' })
+		throw new Error('No user ID provided')
+	}
+
+	const selectUserNicknamesSql = `SELECT * FROM nicknames
+	WHERE assigner_id = ${req.params.userId};
+	`
+	const nicknamesResponse = await db.query(selectUserNicknamesSql)
+	const nicknamesDataArray = nicknamesResponse[0]
+	res.status(200).json(nicknamesDataArray)
+})
+
 export const assignNewNickname = asyncHandler(async (req, res) => {
 	const { user_id, contact_id, nickname } = req.body
 

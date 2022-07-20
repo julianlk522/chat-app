@@ -17,8 +17,11 @@ function ContactInfo() {
     return contact.user_id === state.selectedContact;
   })[0];
   const selectedContactName = selectedContact?.name;
-  const selectedContactId = selectedContact?.user_id;
+  const selectedContactId = state.selectedContact;
   const selectedContactPreferedPic = selectedContact?.prefered_pic;
+  const selectedContactNickname = state?.nicknames?.filter(nickname => {
+    return nickname.contact_id === selectedContactId;
+  })[0]?.nickname;
 
   //  local state
   const [editNickname, setEditNickname] = useState(false);
@@ -32,13 +35,12 @@ function ContactInfo() {
 
   const handleNicknameSubmit = async () => {
     const newNickNameData = {
-      user_id: userId ?? null,
-      contact_id: selectedContactId ?? null,
+      user_id: userId,
+      contact_id: selectedContactId,
       nickname: newNickname,
     };
     // console.log(newNickNameData);
     const newNickNameResponse = await assignNewNickname(newNickNameData);
-    console.log(newNickNameResponse);
     dispatch({ type: 'ASSIGN_NEW_NICKNAME', payload: newNickNameResponse });
   };
 
@@ -65,7 +67,9 @@ function ContactInfo() {
 
         <div id="nickname" className="px-4 flex justify-between items-center">
           {!editNickname ? (
-            <p>'The legend'</p>
+            <p className="font-bold">
+              {selectedContactNickname ? selectedContactNickname : 'The legend'}
+            </p>
           ) : (
             <input
               type="text"
