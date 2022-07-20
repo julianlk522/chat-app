@@ -39,8 +39,9 @@ function ContactInfo() {
       contact_id: selectedContactId,
       nickname: newNickname,
     };
-    // console.log(newNickNameData);
+
     const newNickNameResponse = await assignNewNickname(newNickNameData);
+    console.log(newNickNameResponse);
     dispatch({ type: 'ASSIGN_NEW_NICKNAME', payload: newNickNameResponse });
   };
 

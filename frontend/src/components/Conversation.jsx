@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import ChatContext from '../context/ChatContext';
+import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
 import {
   createNewMessage,
   deleteMessage,
@@ -7,6 +8,7 @@ import {
   getUserContacts,
 } from '../context/ChatActions';
 import { toast } from 'react-toastify';
+import Message from './Message';
 import { formatDistanceToNowStrict } from 'date-fns';
 import {
   MdCall,
@@ -15,7 +17,6 @@ import {
   MdAttachment,
   MdDelete,
 } from 'react-icons/md';
-import Message from './Message';
 
 function Conversation() {
   const toastOptions = {
@@ -30,22 +31,15 @@ function Conversation() {
   const currentUserId = state.user.user_id;
   const currentUserPreferedPic = state.user.prefered_pic;
 
-  const selectedContact = state.userContacts.filter(contact => {
-    return contact.user_id === state.selectedContact;
-  })[0];
-  const selectedContactName = selectedContact?.name;
-  const selectedContactId = selectedContact?.user_id;
-  const selectedContactPreferedPic = selectedContact?.prefered_pic;
-  const selectedContactLastActive = selectedContact?.last_active;
-  const selectedContactMessages =
-    state.messages && state.messages.length > 0
-      ? state?.messages?.filter(message => {
-          return (
-            message.sender_id === selectedContactId ||
-            message.receiver_id === selectedContactId
-          );
-        })
-      : [];
+  const selectedContactId = state.selectedContact;
+  const {
+    selectedContactName,
+    selectedContactNickname,
+    selectedContactPreferedPic,
+    selectedContactLastActive,
+    selectedContactMessages,
+  } = useSelectedContactInfo();
+
   const queuedForDeleteArray = state.queuedForDelete;
 
   //  local state
@@ -163,7 +157,11 @@ function Conversation() {
             className="flex justify-center items-center"
           >
             <h3 className="text-3xl mr-4 min-w-[33%]">
-              {selectedContactName ?? ''}
+              {selectedContactNickname
+                ? selectedContactNickname
+                : selectedContactName
+                ? selectedContactName
+                : ''}
             </h3>
 
             {randomlyOnline ? (
@@ -185,7 +183,7 @@ function Conversation() {
                 <span id="formattedLastActive" className="mx-2">
                   {formatDistanceToNowStrict(
                     new Date(selectedContactLastActive)
-                  )}{' '}
+                  ) ?? ''}{' '}
                   ago
                 </span>
               </h3>

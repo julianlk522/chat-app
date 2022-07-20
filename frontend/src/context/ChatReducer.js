@@ -58,15 +58,12 @@ const chatReducer = (state, action) => {
     case 'ASSIGN_NEW_NICKNAME':
       return {
         ...state,
-        nicknames: state.nicknames.map(nickname => {
-          return nickname.assigner_id ===
-            action.payload.newNicknameResponseData.assigner_id &&
-            nickname.contact_id ===
-              action.payload.newNicknameResponseData.contact_id
-            ? action.payload.newNicknameResponseData
+        nicknames: state.nicknames.concat(action.payload).map(nickname => {
+          return nickname.assigner_id === action.payload.assigner_id &&
+            nickname.contact_id === action.payload.contact_id
+            ? action.payload
             : nickname;
         }),
-        // action.payload.newNicknameResponseData
         loading: false,
       };
     case 'NEW_MESSAGE':

@@ -147,5 +147,5 @@ export const assignNewNickname = asyncHandler(async (req, res) => {
 	const newNicknameResponse = await db.query(selectNewNicknameSql)
 	const newNicknameResponseData = newNicknameResponse[0][0]
 
-	res.status(200).json({ newNicknameResponseData })
+	res.status(200).json(newNicknameResponseData)
 })
