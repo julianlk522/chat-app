@@ -8,8 +8,8 @@ import {
   getUserContacts,
 } from '../context/ChatActions';
 import { toast } from 'react-toastify';
-import Message from './Message';
 import { formatDistanceToNowStrict } from 'date-fns';
+import Message from './Message';
 import {
   MdCall,
   MdVideoCall,
@@ -62,8 +62,8 @@ function Conversation() {
     randomlyAssignOnlineStatus();
   }, [selectedContactId]);
 
-  //  change newMessage state to user input unless there are quote characters
   const onNewMessageChange = e => {
+    //  no quote chars allowed so MySQL stays happy
     if (
       e.target.value.indexOf('"') !== -1 ||
       e.target.value.indexOf("'") !== -1
@@ -77,18 +77,7 @@ function Conversation() {
     setNewMessage(e.target.value);
   };
 
-  //  create new message
-  const submitMessage = async () => {
-    dispatch({ type: 'SET_LOADING' });
-    //  update messages state
-    const updatedMessages = await createNewMessage(
-      currentUserId,
-      selectedContactId,
-      newMessage
-    );
-    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
-
-    //  update userContacts state
+  const updateUserContacts = async () => {
     const contactsData = await getUserContacts(currentUserId);
     dispatch({
       type: 'GET_USER_CONTACTS',
@@ -107,37 +96,79 @@ function Conversation() {
         };
       }),
     });
+  };
+
+  const checkIfAllMessagesDeleted = () => {
+    const selectedContactMessagesIdsArray = selectedContactMessages.map(
+      message => {
+        return message.message_id;
+      }
+    );
+
+    const deletedAllMessages = selectedContactMessagesIdsArray.every(
+      message_id => {
+        return queuedForDeleteArray.indexOf(message_id) !== -1;
+      }
+    );
+
+    if (deletedAllMessages) {
+      const nextContactOnSortedList = state.userContacts.sort((a, b) => {
+        if (a.recentMessage?.created_at > b.recentMessage?.created_at)
+          return -1;
+        if (b.recentMessage?.created_at > a.recentMessage?.created_at) return 1;
+        else return 0;
+      })[1].user_id;
+
+      dispatch({
+        type: 'SET_SELECTED_CONTACT',
+        payload: nextContactOnSortedList,
+      });
+    }
+  };
+
+  const submitMessage = async () => {
+    dispatch({ type: 'SET_LOADING' });
+
+    const updatedMessages = await createNewMessage(
+      currentUserId,
+      selectedContactId,
+      newMessage
+    );
+    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
+    updateUserContacts();
     setNewMessage('');
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  //  delete message(s)
-  const triggerDeleteMessage = async e => {
-    e.preventDefault();
-    setConfirmDelete(!confirmDelete);
-    //  check if user has confirmed delete before calling actions
-    if (confirmDelete) {
-      setNewMessage('');
-      dispatch({ type: 'SET_LOADING' });
-      //  case for one deletion
-      if (queuedForDeleteArray.length === 1) {
-        const messagesMinusOne = await deleteMessage(
-          currentUserId,
-          queuedForDeleteArray[0].toString()
-        );
-        dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne[0] });
-        //  case for multiple deletion
-      } else {
-        const messageMinusSeveral = await deleteMultipleMessages(
-          currentUserId,
-          queuedForDeleteArray.toString()
-        );
-        dispatch({
-          type: 'DELETE_MESSAGE',
-          payload: messageMinusSeveral[0],
-        });
-      }
-    } else return;
+  //  delete one or multiple messages
+  const deleteMessages = async () => {
+    dispatch({ type: 'SET_LOADING' });
+
+    //  case for one deletion
+    if (queuedForDeleteArray.length === 1) {
+      const messagesMinusOne = await deleteMessage(
+        currentUserId,
+        queuedForDeleteArray[0].toString()
+      );
+      dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne[0] });
+
+      //  case for multiple deletion
+    } else {
+      const messagesMinusSeveral = await deleteMultipleMessages(
+        currentUserId,
+        queuedForDeleteArray.toString()
+      );
+      dispatch({
+        type: 'DELETE_MESSAGE',
+        payload: messagesMinusSeveral[0],
+      });
+    }
+    updateUserContacts();
+    checkIfAllMessagesDeleted();
+    setNewMessage('');
+    setEditMode(false);
+    setConfirmDelete(false);
+    dispatch({ type: 'RESET_DELETION_CUE' });
   };
 
   return (
@@ -258,8 +289,11 @@ function Conversation() {
         {editMode && queuedForDeleteArray.length > 0 ? (
           <button
             id="deleteMessagesButton"
-            className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 text-sm"
-            onClick={triggerDeleteMessage}
+            className="focus:outline-none rounded-2xl bg-red-600 hover:bg-red-700 p-2 text-sm"
+            onClick={() => {
+              setConfirmDelete(!confirmDelete);
+              if (confirmDelete) deleteMessages();
+            }}
           >
             {!confirmDelete
               ? queuedForDeleteArray.length === 1

@@ -18,7 +18,7 @@ export const useSelectedContactInfo = () => {
     //  update selectedContact with changes to selectedContactId
     if (selectedContactId) {
       setSelectedContact(
-        state.userContacts.filter(contact => {
+        state.contacts.filter(contact => {
           return contact.user_id === state.selectedContact;
         })[0]
       );
@@ -30,33 +30,24 @@ export const useSelectedContactInfo = () => {
 
   //  update selectedContact info with changes to selectedContact
   useEffect(() => {
-    if (selectedContact) {
-      setSelectedContactMessages(
-        state.messages && state.messages.length > 0
-          ? state?.messages?.filter(message => {
-              return (
-                message.sender_id === selectedContactId ||
-                message.receiver_id === selectedContactId
-              );
-            })
-          : []
-      );
-      setSelectedContactNickname(
-        state.nicknames.filter(nickname => {
-          return nickname.contact_id === selectedContactId;
-        })[0]?.nickname ?? null
-      );
-      setSelectedContactName(selectedContact.name);
-      setSelectedContactPreferedPic(selectedContact.prefered_pic);
-      setSelectedContactLastActive(selectedContact.last_active);
-      //  reset if there is no selectedContact
-    } else {
-      setSelectedContactMessages([]);
-      setSelectedContactNickname(null);
-      setSelectedContactName(null);
-      setSelectedContactPreferedPic(null);
-      setSelectedContactLastActive(null);
-    }
+    setSelectedContactMessages(
+      state.messages && state.messages.length > 0
+        ? state?.messages?.filter(message => {
+            return (
+              message.sender_id === selectedContactId ||
+              message.receiver_id === selectedContactId
+            );
+          })
+        : []
+    );
+    setSelectedContactNickname(
+      state.nicknames.filter(nickname => {
+        return nickname.contact_id === selectedContactId;
+      })[0]?.nickname ?? null
+    );
+    setSelectedContactName(selectedContact?.name);
+    setSelectedContactPreferedPic(selectedContact?.prefered_pic);
+    setSelectedContactLastActive(selectedContact?.last_active);
     //  eslint-disable-next-line
   }, [selectedContact, state.messages, state.nicknames]);
 

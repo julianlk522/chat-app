@@ -107,7 +107,7 @@ function ContactInfo() {
           )}
           <button
             id="editNicknameIcon"
-            className={`py-2 rounded-full text-white self-center ${
+            className={`focus:outline-none py-2 rounded-full text-white self-center ${
               editNickname
                 ? nicknameReadyToSubmit
                   ? 'bg-lime-500'

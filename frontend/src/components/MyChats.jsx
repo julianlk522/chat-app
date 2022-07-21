@@ -36,6 +36,11 @@ function MyChats() {
     fetchContactsData();
   }, [dispatch, state.user?.user_id, state.userContacts]);
 
+  //  set readyToInputNewContacts to false if userContacts changes
+  useEffect(() => {
+    setReadyToInputNewContacts(false);
+  }, [state.userContacts]);
+
   //  sort contacts based on recentMessage age
   const handleSort = userContactArr => {
     return userContactArr.sort((a, b) => {
@@ -56,7 +61,7 @@ function MyChats() {
     >
       <div
         id="contactsList"
-        className="flex flex-col justify-center items-center"
+        className="flex flex-col justify-center items-center overflow-hidden"
       >
         <div
           id="myChatsTitleDiv"
@@ -67,7 +72,7 @@ function MyChats() {
           </h3>
           <button
             id="addContact"
-            className={`rounded-full p-2 text-white ${
+            className={`rounded-full p-2 text-white focus:outline-none ${
               !readyToInputNewContacts
                 ? 'bg-sky-600 hover:bg-sky-700'
                 : 'bg-red-600 hover:bg-red-700'
@@ -111,6 +116,7 @@ function MyChats() {
         {/* contacts list */}
         <div
           id="contactsList"
+          className="overflow-y-scroll"
           onClick={() => setReadyToInputNewContacts(false)}
         >
           {state.userContacts?.length ? (
@@ -212,7 +218,7 @@ function MyChats() {
         )}
         {!editPreferedPic ? (
           <button
-            className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
+            className="focus:outline-none rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
             onClick={e => {
               e.preventDefault();
               dispatch({ type: 'LOGOUT_USER' });
