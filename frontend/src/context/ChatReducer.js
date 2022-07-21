@@ -66,6 +66,15 @@ const chatReducer = (state, action) => {
         }),
         loading: false,
       };
+    case 'ASSIGN_NEW_PREFERED_PIC':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          prefered_pic: action.payload,
+        },
+        loading: false,
+      };
     case 'NEW_MESSAGE':
       return {
         ...state,

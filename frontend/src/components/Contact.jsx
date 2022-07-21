@@ -9,13 +9,14 @@ import gorfPic from '../assets/gorfPic.jpg';
 
 function Contact({ name, id, recentMessage, prefered_pic }) {
   const { state, dispatch } = useContext(ChatContext);
-  const selectedContact = state.selectedContact ?? '';
+
+  const selectedContactId = state.selectedContact ?? null;
   const userId = state.user.user_id;
 
   return (
     <div
       className={`flex justify-evenly w-full items-center p-4 ${
-        selectedContact === id && 'bg-slate-200'
+        selectedContactId === id && 'bg-slate-200'
       }`}
       onClick={async () => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
@@ -41,7 +42,9 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
         <div id="contactNameInfo">
           <h4>{name}</h4>
 
-          <p className="text-xs font-light">{recentMessage.content}</p>
+          <p className="text-xs font-light cursor-default">
+            {recentMessage.content}
+          </p>
         </div>
         <div id="messageAge">
           {recentMessage.seen === 1 || recentMessage.sender_id === userId ? (

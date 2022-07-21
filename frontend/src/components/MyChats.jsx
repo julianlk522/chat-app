@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { useNavigate } from 'react-router-dom';
-import { getAllContacts } from '../context/ChatActions';
+import { assignNewPreferedPic, getAllContacts } from '../context/ChatActions';
 import Contact from './Contact';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
@@ -15,8 +15,9 @@ function MyChats() {
   const { state, dispatch } = useContext(ChatContext);
   const navigate = useNavigate();
 
-  //  add contacts state
   const [readyToInputNewContacts, setReadyToInputNewContacts] = useState(false);
+  const [editPreferedPic, setEditPreferedPic] = useState(false);
+  const [preferedPicSelected, setPreferedPicSelected] = useState(null);
 
   //  fetch contact data on load
   useEffect(() => {
@@ -89,7 +90,6 @@ function MyChats() {
               ?.filter(contact => {
                 return !userContactsIds.includes(contact.user_id);
               })
-              //  return only contact ID and name data
               ?.map(contact => {
                 return {
                   value: contact.user_id,
@@ -127,47 +127,136 @@ function MyChats() {
             })
           ) : (
             <p>No contacts yet.</p>
-          )}{' '}
+          )}
         </div>
       </div>
       <div
         id="userProfileArea"
         className="py-4 flex flex-col justify-evenly items-center w-full h-[20%] border-t-2 border-t-slate-300"
       >
-        <div
-          id="nameAndPicDiv"
-          className="flex justify-evenly items-center mb-4"
-        >
-          <img
-            src={
-              state.user.prefered_pic === 1
-                ? trexPic
-                : state.user.prefered_pic === 2
-                ? gorfPic
-                : state.user.prefered_pic === 3
-                ? crazyGuyPic
-                : genericPic
-            }
-            alt="profile pic"
-            className="rounded-full w-16 h-16 object-cover border-2 border-slate-300 border-opacity-50"
-          />
+        {!editPreferedPic ? (
+          <div
+            id="nameAndPicDiv"
+            className="flex justify-evenly items-center mb-4"
+          >
+            <img
+              src={
+                state.user.prefered_pic === 1
+                  ? trexPic
+                  : state.user.prefered_pic === 2
+                  ? gorfPic
+                  : state.user.prefered_pic === 3
+                  ? crazyGuyPic
+                  : genericPic
+              }
+              alt="profile pic"
+              className="rounded-full w-16 h-16 object-cover border-2 border-slate-300 border-opacity-50 hover:opacity-50 cursor-pointer"
+              onClick={() => setEditPreferedPic(!editPreferedPic)}
+            />
 
-          <p id="userName" className="text-xl text-center font-bold ml-8">
-            {state.user.name}
-          </p>
-        </div>
+            <p id="userName" className="text-xl text-center font-bold ml-8">
+              {state.user.name}
+            </p>
+          </div>
+        ) : (
+          <div
+            id="profilePicSelectionDiv"
+            className="flex justify-evenly items-center w-full"
+          >
+            <img
+              src={trexPic}
+              alt="pic1"
+              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
+                preferedPicSelected === 1 && 'opacity-100'
+              }`}
+              onClick={() => {
+                if (preferedPicSelected !== 1) setPreferedPicSelected(1);
+                else setPreferedPicSelected(null);
+              }}
+            />
 
-        <button
-          className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
-          onClick={e => {
-            e.preventDefault();
-            dispatch({ type: 'LOGOUT_USER' });
-            localStorage.removeItem('chatUser');
-            navigate('/sign-in');
-          }}
-        >
-          Logout
-        </button>
+            <img
+              src={gorfPic}
+              alt="pic2"
+              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
+                preferedPicSelected === 2 && 'opacity-100'
+              }`}
+              onClick={() => {
+                if (preferedPicSelected !== 2) setPreferedPicSelected(2);
+                else setPreferedPicSelected(null);
+              }}
+            />
+            <img
+              src={crazyGuyPic}
+              alt="pic3"
+              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
+                preferedPicSelected === 3 && 'opacity-100'
+              }`}
+              onClick={() => {
+                if (preferedPicSelected !== 3) setPreferedPicSelected(3);
+                else setPreferedPicSelected(null);
+              }}
+            />
+            <img
+              src={genericPic}
+              alt="pic4"
+              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
+                preferedPicSelected === 4 && 'opacity-100'
+              }`}
+              onClick={() => {
+                if (preferedPicSelected !== 4) setPreferedPicSelected(4);
+                else setPreferedPicSelected(null);
+              }}
+            />
+          </div>
+        )}
+        {!editPreferedPic ? (
+          <button
+            className="rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
+            onClick={e => {
+              e.preventDefault();
+              dispatch({ type: 'LOGOUT_USER' });
+              localStorage.removeItem('chatUser');
+              navigate('/sign-in');
+            }}
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            className={`rounded-2xl p-2 ${!editPreferedPic && 'w-1/3'} ${
+              editPreferedPic &&
+              preferedPicSelected !== null &&
+              preferedPicSelected !== state.user.prefered_pic
+                ? 'bg-lime-500'
+                : 'bg-red-600 hover:bg-red-700'
+            }`}
+            onClick={() => {
+              if (
+                editPreferedPic &&
+                preferedPicSelected &&
+                preferedPicSelected !== state.user.prefered_pic
+              ) {
+                console.log(
+                  'dispatch new prefered pic now!',
+                  preferedPicSelected
+                );
+                assignNewPreferedPic(state.user.user_id, preferedPicSelected);
+                dispatch({
+                  type: 'ASSIGN_NEW_PREFERED_PIC',
+                  payload: preferedPicSelected,
+                });
+              }
+              setEditPreferedPic(!editPreferedPic);
+              setPreferedPicSelected(null);
+            }}
+          >
+            {preferedPicSelected &&
+            preferedPicSelected !== state.user.prefered_pic
+              ? 'Confirm new avatar selection'
+              : 'Actually I like this avatar'}
+          </button>
+        )}
       </div>
     </div>
   );

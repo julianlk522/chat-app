@@ -75,6 +75,18 @@ export const assignNewNickname = async nickNameData => {
   return await response.json();
 };
 
+export const assignNewPreferedPic = async (userId, preferedPic) => {
+  const response = await fetch(
+    `${API_URL}/users/${userId}/prefered-pic/${preferedPic}`,
+    {
+      method: 'POST',
+      headers: paramsHeaders,
+    }
+  );
+
+  return await response.json();
+};
+
 export const createNewMessage = async (userId, contactId, content) => {
   const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',

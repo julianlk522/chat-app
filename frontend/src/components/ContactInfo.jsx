@@ -1,16 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ChatContext from '../context/ChatContext';
 import { assignNewNickname } from '../context/ChatActions';
+import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
+import { toast } from 'react-toastify';
 import { RiGhostSmileLine } from 'react-icons/ri';
 import { FiEdit2, FiCheckCircle } from 'react-icons/fi';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
 import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
-import { useEffect } from 'react';
-import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
 
 function ContactInfo() {
+  const toastOptions = {
+    autoClose: 4000,
+    position: toast.POSITION.BOTTOM_RIGHT,
+  };
+
   //  context
   const { state, dispatch } = useContext(ChatContext);
   const userId = state?.user?.user_id;
@@ -75,12 +80,29 @@ function ContactInfo() {
             </p>
           ) : (
             <input
-              type="text"
+              className="border-2 border-solid border-slate-200 rounded-2xl text-center xl:w-[75%]"
               id="nickNameInput"
               placeholder="new nickname..."
               value={newNickname}
-              onChange={e => setNewNickname(e.target.value)}
-              className="border-2 border-solid border-slate-200 rounded-2xl text-center xl:w-[75%]"
+              onChange={e => {
+                if (
+                  e.target.value.indexOf('"') !== -1 ||
+                  e.target.value.indexOf("'") !== -1
+                ) {
+                  return toast.error(
+                    'Sorry, no quote characters allowed in your nickname!',
+                    toastOptions
+                  );
+                }
+                setNewNickname(e.target.value);
+              }}
+              onKeyDown={e => {
+                if (nicknameReadyToSubmit && e.key === 'Enter') {
+                  handleNicknameSubmit();
+                  setEditNickname(!editNickname);
+                  setNewNickname('');
+                }
+              }}
             />
           )}
           <button

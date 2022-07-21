@@ -149,3 +149,18 @@ export const assignNewNickname = asyncHandler(async (req, res) => {
 
 	res.status(200).json(newNicknameResponseData)
 })
+
+export const assignNewPreferedPic = asyncHandler(async (req, res) => {
+	const { userId, preferedPic } = req.params
+
+	if (!userId || !preferedPic) {
+		res.status(400).json({ error: 'userId or preferedPic not provided' })
+		throw new Error('userId or preferedPic not provided')
+	}
+
+	const updatePreferedPicSql = `UPDATE users SET prefered_pic = ${preferedPic} WHERE user_id = ${userId};`
+
+	db.query(updatePreferedPicSql)
+
+	res.status(200).json({ success: true })
+})
