@@ -62,6 +62,10 @@ function Conversation() {
     randomlyAssignOnlineStatus();
   }, [selectedContactId]);
 
+  useEffect(() => {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedContactMessages]);
+
   const onNewMessageChange = e => {
     //  no quote chars allowed so MySQL stays happy
     if (
@@ -137,7 +141,6 @@ function Conversation() {
     dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
     updateUserContacts();
     setNewMessage('');
-    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   //  delete one or multiple messages
@@ -178,13 +181,13 @@ function Conversation() {
     >
       <div
         id="convoHeader"
-        className={`flex items-center h-[10%] p-8 ${
+        className={`flex items-center h-[10vh] p-8 ${
           state?.contacts?.length ? 'justify-between' : 'justify-end'
         }`}
       >
         {state.userContacts.length > 0 && (
           <div id="recipientNameArea" className="flex flex-grow items-center">
-            <h3 className="text-3xl mr-4">
+            <h3 className="text-2xl mr-4">
               {selectedContactNickname
                 ? selectedContactNickname
                 : selectedContactName
@@ -239,21 +242,23 @@ function Conversation() {
             <MdDelete className="mx-2" />
           </button>
 
-          <button className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-            <MdCall
-              className="mx-2"
-              onClick={() => toast('Coming soon!', toastOptions)}
-            />
+          <button
+            className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white"
+            onClick={() => toast('Coming soon!', toastOptions)}
+          >
+            <MdCall className="mx-2" />
           </button>
 
-          <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-            <MdVideoCall
-              className="mx-2"
-              onClick={() => toast('Coming soon!', toastOptions)}
-            />
+          <button
+            className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white"
+            onClick={() => toast('Coming soon!', toastOptions)}
+          >
+            <MdVideoCall className="mx-2" />
           </button>
         </div>
       </div>
+
+      <hr className="bg-black h-1 opacity-5 rounded-2xl w-[80%] self-center" />
 
       <div id="conversationBody" className="h-4/5 overflow-y-scroll">
         {selectedContactMessages &&
@@ -277,7 +282,7 @@ function Conversation() {
 
       <div
         id="conversationTypingArea"
-        className="bg-slate-200 self-end w-full h-[10%] flex justify-between items-center p-8"
+        className="bg-slate-200 self-end w-full h-[10vh] flex justify-between items-center p-8"
       >
         <input
           type="text"
@@ -316,11 +321,11 @@ function Conversation() {
               <MdSend className="mx-2 min-w-[1rem] min-h-[1rem]" />
             </button>
 
-            <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-              <MdAttachment
-                className="mx-2 min-w-[1rem] min-h-[1rem]"
-                onClick={() => toast('Coming soon!', toastOptions)}
-              />
+            <button
+              className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white"
+              onClick={() => toast('Coming soon!', toastOptions)}
+            >
+              <MdAttachment className="mx-2 min-w-[1rem] min-h-[1rem]" />
             </button>
           </div>
         )}

@@ -57,11 +57,17 @@ function ChatScreen() {
   }, [dispatch, navigate]);
 
   return (
-    <div className="flex justify-between h-full">
-      <MyChats />
-      <Conversation />
-      <ContactInfo />
-    </div>
+    <>
+      <div
+        id="bgWrapper"
+        className="bg-mainBg h-full w-full z-[-1] fixed opacity-40"
+      ></div>
+      <div className="flex justify-between h-full">
+        <MyChats />
+        <Conversation />
+        <ContactInfo />
+      </div>
+    </>
   );
 }
 

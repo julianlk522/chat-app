@@ -39,6 +39,11 @@ function ContactInfo() {
     else setNicknameReadyToSubmit(false);
   }, [newNickname.length]);
 
+  useEffect(() => {
+    setEditNickname(false);
+    setNewNickname('');
+  }, [selectedContactId]);
+
   const handleNicknameSubmit = async () => {
     const newNickNameData = {
       user_id: userId,
@@ -135,28 +140,28 @@ function ContactInfo() {
         <div id="hideAlerts" className="py-4 flex justify-between">
           <p>Hide Alerts</p>
           <div
-            className={`transition ease-in-out w-8 rounded-2xl flex  cursor-pointer ${
+            className={`transition ease-in-out w-8 rounded-2xl flex cursor-pointer ${
               hideAlerts
                 ? 'justify-end bg-lime-500'
                 : 'justify-start bg-slate-300'
             }`}
             onClick={() => setHideAlerts(!hideAlerts)}
           >
-            <div className="w-[60%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
+            <div className="w-[70%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
           </div>
         </div>
-        <hr className="bg-black h-1 opacity-10 rounded-2xl" />
+        <hr className="bg-black h-1 opacity-5 rounded-2xl" />
         <div id="sendReadReceipts" className="py-4 flex justify-between">
           <p>Send Read Receipts</p>
           <div
-            className={`transition ease-in-out w-8 rounded-2xl flex  cursor-pointer ${
+            className={`transition ease-in-out w-8 rounded-2xl flex cursor-pointer ${
               readReceipts
                 ? 'justify-end bg-lime-500'
                 : 'justify-start bg-slate-300'
             }`}
             onClick={() => setReadReceipts(!readReceipts)}
           >
-            <div className="w-[60%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
+            <div className="w-[70%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
           </div>
         </div>
       </div>
@@ -168,7 +173,7 @@ function ContactInfo() {
 
         <div id="photosContainer" className="px-4 my-4 rounded-2xl shadow-md">
           <p className="py-4">Photos and Videos</p>
-          <hr className="bg-black h-1 opacity-10 rounded-2xl" />
+          <hr className="bg-black h-1 opacity-5 rounded-2xl" />
           <div id="photos" className="py-4 flex justify-center overflow-hidden">
             <img
               src={trexPic}

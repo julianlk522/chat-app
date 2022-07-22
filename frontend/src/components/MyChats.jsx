@@ -65,7 +65,7 @@ function MyChats() {
       >
         <div
           id="myChatsTitleDiv"
-          className="w-full h-[10vh] flex justify-evenly items-center"
+          className="w-full h-[10vh] py-8 flex justify-evenly items-center"
         >
           <h3 id="myChatsTitle" className="text-xl">
             My Chats
@@ -111,6 +111,10 @@ function MyChats() {
               });
             }}
           />
+        )}
+
+        {!readyToInputNewContacts && (
+          <hr className="bg-black h-1 opacity-5 rounded-2xl w-[80%] self-center mb-2" />
         )}
 
         {/* contacts list */}
@@ -218,7 +222,7 @@ function MyChats() {
         )}
         {!editPreferedPic ? (
           <button
-            className="focus:outline-none rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3"
+            className="focus:outline-none rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3 text-white"
             onClick={e => {
               e.preventDefault();
               dispatch({ type: 'LOGOUT_USER' });

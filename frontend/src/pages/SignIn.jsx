@@ -60,12 +60,23 @@ function SignIn() {
 
   return (
     <>
-      <div className="flex flex-col text-center px-8">
+      <div
+        id="bgWrapperMask"
+        className="bg-black h-full w-full z-[-1] fixed opacity-60"
+      ></div>
+      <div
+        // bg image source: Priscilla Du Preez https://unsplash.com/photos/sOdldNCQEtU
+        id="bgWrapper"
+        className="bg-authBg bg-auto h-full w-full z-[-2] fixed opacity-40"
+      ></div>
+      <div className="flex flex-col h-full text-center px-8 bg-slate-100 bg-opacity-25 mx-60">
         <header>
-          <p id="header" className="text-4xl font-extrabold m-12 mb-4">
+          <p id="header" className="text-4xl text-white font-extrabold m-12">
             Welcome back!
           </p>
-          <p>Enter your username and password below to sign-in</p>
+          <p className="text-white my-4">
+            Enter your username and password below to sign-in
+          </p>
         </header>
 
         <form onSubmit={onSubmit}>
@@ -96,10 +107,12 @@ function SignIn() {
           </div>
 
           <div className="flex justify-evenly items-center my-8">
-            <p className="text-2xl font-bold">Sign in</p>
+            <p className="text-2xl text-sky-500 font-bold">Sign in</p>
             <button
-              className={`flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 ${
-                readyForSubmit ? 'bg-sky-500 cursor-pointer' : 'bg-slate-300'
+              className={`flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 border-opacity-50 ${
+                readyForSubmit
+                  ? 'bg-sky-500 cursor-pointer hover:scale-110'
+                  : 'bg-slate-300'
               }`}
               disabled={!readyForSubmit}
             >
@@ -108,12 +121,19 @@ function SignIn() {
           </div>
         </form>
 
-        <Link
-          to="/sign-up"
-          className="text-sky-500 font-semibold text-center flex justify-center items-center mt-20"
-        >
-          Take me to Sign Up instead
-        </Link>
+        <div id="signUpDiv" className="flex justify-center items-center ">
+          <button
+            id="signUpLink"
+            className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
+          >
+            <Link
+              to="/sign-up"
+              className="max-w-[50%] text-slate-200 text-sm font-semibold mt-20"
+            >
+              Take me to Sign Up instead
+            </Link>
+          </button>
+        </div>
       </div>
     </>
   );
