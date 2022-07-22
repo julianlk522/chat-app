@@ -34,29 +34,6 @@ export const getUserMessages = asyncHandler(async (req, res) => {
 	}
 })
 
-export const getMostRecentMessagesFromContacts = asyncHandler(
-	async (req, res) => {
-		if (!req.params.userId) {
-			res.status(400)
-			throw new Error('No user ID provided')
-		}
-		// check if user exists
-		const userExists = await db.query(
-			`SELECT EXISTS (SELECT user_id FROM users WHERE user_id = \'${req.params.userId}\');`
-		)
-
-		if (Object.values(userExists[0][0])[0]) {
-			const sql = `SELECT users.name, sender_id, receiver_id, content, seen, created_at FROM (SELECT users.name, message_id, sender_id, receiver_id, content, seen, created_at FROM messages JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} AND (sender_id = ${req.params.userId} OR receiver_id = ${req.params.userId}) GROUP BY users.name) as user_contacts_select JOIN users ON (users.user_id = sender_id OR users.user_id = receiver_id) WHERE users.user_id != ${req.params.userId} ORDER BY created_at;`
-
-			const recentMessageData = await db.query(sql)
-			res.status(200).json(recentMessageData)
-		} else {
-			res.status(400)
-			throw new Error('No user found with ID provided')
-		}
-	}
-)
-
 export const readContactMessages = asyncHandler(async (req, res) => {
 	const { userId, contactId } = req.body
 

@@ -53,7 +53,7 @@ function ContactInfo() {
 
     const newNickNameResponse = await assignNewNickname(newNickNameData);
 
-    dispatch({ type: 'ASSIGN_NEW_NICKNAME', payload: newNickNameResponse });
+    dispatch({ type: 'SET_NEW_NICKNAME', payload: newNickNameResponse });
   };
 
   return (

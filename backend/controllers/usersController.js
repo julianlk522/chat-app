@@ -8,10 +8,10 @@ export const getUsers = asyncHandler(async (req, res) => {
 	res.status(200).json(userData)
 })
 
-export const getUserContacts = asyncHandler(async (req, res) => {
+export const getSortedUserContacts = asyncHandler(async (req, res) => {
 	if (!req.params.userId) throw new Error('No user ID provided')
 
-	const sql = `SELECT name, user_id, prefered_pic, last_active, messages.content, messages.created_at, messages.seen, messages.sender_id FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name;`
+	const sql = `SELECT name, user_id, prefered_pic, last_active, messages.content, messages.created_at, messages.seen, messages.sender_id FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name ORDER BY created_at DESC;`
 
 	const contactsData = await db.query(sql)
 	res.status(200).json(contactsData)

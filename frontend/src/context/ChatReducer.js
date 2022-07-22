@@ -17,45 +17,35 @@ const chatReducer = (state, action) => {
         userContacts: [],
         selectedContact: null,
         messages: [],
-        mostRecentMessages: [],
         queuedForDelete: [],
         loading: false,
       };
-    case 'GET_ALL_CONTACTS':
+    case 'SET_ALL_CONTACTS':
       return {
         ...state,
         contacts: action.payload,
         loading: false,
       };
-    case 'GET_USER_CONTACTS':
+    case 'SET_USER_CONTACTS':
       return {
         ...state,
         userContacts: action.payload,
-        selectedContact:
-          action.payload.length === state.userContacts.length
-            ? action.payload.sort((a, b) => {
-                if (a.recentMessage?.created_at > b.recentMessage?.created_at)
-                  return -1;
-                if (b.recentMessage?.created_at > a.recentMessage?.created_at)
-                  return 1;
-                else return 0;
-              })[0].user_id
-            : state.selectedContact,
+        selectedContact: action.payload[0].user_id,
         loading: false,
       };
-    case 'GET_USER_MESSAGES':
+    case 'SET_USER_MESSAGES':
       return {
         ...state,
         messages: action.payload,
         loading: false,
       };
-    case 'GET_CONTACT_NICKNAMES':
+    case 'SET_CONTACT_NICKNAMES':
       return {
         ...state,
         nicknames: action.payload,
         loading: false,
       };
-    case 'ASSIGN_NEW_NICKNAME':
+    case 'SET_NEW_NICKNAME':
       return {
         ...state,
         nicknames: state.nicknames.concat(action.payload).map(nickname => {
@@ -66,7 +56,7 @@ const chatReducer = (state, action) => {
         }),
         loading: false,
       };
-    case 'ASSIGN_NEW_PREFERED_PIC':
+    case 'SET_NEW_PREFERED_PIC':
       return {
         ...state,
         user: {
@@ -118,12 +108,6 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         messages: action.payload,
-        loading: false,
-      };
-    case 'GET_RECENT_MESSAGES_FROM_CONTACTS':
-      return {
-        ...state,
-        mostRecentMessages: action.payload,
         loading: false,
       };
     case 'SET_SELECTED_CONTACT':

@@ -3,7 +3,7 @@ import {
 	getUsers,
 	newUser,
 	loginUser,
-	getUserContacts,
+	getSortedUserContacts,
 	assignNewNickname,
 	getUserNicknames,
 	assignNewPreferedPic,
@@ -14,7 +14,7 @@ router.route('/').get(getUsers).post(newUser)
 
 router.route('/login').post(loginUser)
 
-router.route('/:userId').get(getUserContacts)
+router.route('/:userId').get(getSortedUserContacts)
 
 router.route('/:userId/nicknames').get(getUserNicknames)
 

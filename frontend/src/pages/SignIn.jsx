@@ -17,11 +17,9 @@ function SignIn() {
     username: '',
     password: '',
   });
+  const [readyForSubmit, setReadyForSubmit] = useState(false);
 
   const { username, password } = formData;
-
-  //  submit disabled state
-  const [readyForSubmit, setReadyForSubmit] = useState(false);
 
   //  check for submit disabled on username/password change
   useEffect(() => {
@@ -31,27 +29,28 @@ function SignIn() {
       } else setReadyForSubmit(false);
     };
     checkReadyForSubmit();
-  }, [username.length, password.length]);
+  }, [username, password]);
 
   const navigate = useNavigate();
   const { dispatch } = useContext(ChatContext);
 
-  const onChange = event => {
+  const onInputChange = e => {
     setFormData(prevState => ({
       ...prevState,
-      [event.target.id]: event.target.value,
+      [e.target.id]: e.target.value,
     }));
   };
 
   const onSubmit = async e => {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
-    //  log in user, retrieve id
+
     const loginData = await loginUser(formData);
+
     //  if error show user a toast
     if (loginData.error) {
       toast.error(`Error: ${loginData.error}`, toastOptions);
-    } //  set localstorage if successful login
+    } //  else set localstorage user info
     else {
       localStorage.setItem('chatUser', JSON.stringify(loginData));
       navigate('/');
@@ -85,7 +84,7 @@ function SignIn() {
             placeholder="Username"
             id="username"
             value={username}
-            onChange={onChange}
+            onChange={onInputChange}
           />
 
           <div id="passwordDiv" className="flex items-center relative">
@@ -95,7 +94,7 @@ function SignIn() {
               placeholder="Password"
               id="password"
               value={password}
-              onChange={onChange}
+              onChange={onInputChange}
             />
 
             <img

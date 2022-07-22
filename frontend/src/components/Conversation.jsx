@@ -5,7 +5,7 @@ import {
   createNewMessage,
   deleteMessage,
   deleteMultipleMessages,
-  getUserContacts,
+  getSortedUserContacts,
 } from '../context/ChatActions';
 import { toast } from 'react-toastify';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -82,9 +82,9 @@ function Conversation() {
   };
 
   const updateUserContacts = async () => {
-    const contactsData = await getUserContacts(currentUserId);
+    const contactsData = await getSortedUserContacts(currentUserId);
     dispatch({
-      type: 'GET_USER_CONTACTS',
+      type: 'SET_USER_CONTACTS',
       payload: contactsData[0].map(contactData => {
         return {
           name: contactData.name,

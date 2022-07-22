@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import {
   getUserMessages,
-  getUserContacts,
+  getSortedUserContacts,
   getUserNicknames,
 } from '../context/ChatActions';
 import MyChats from '../components/MyChats';
@@ -15,21 +15,23 @@ function ChatScreen() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkIfUser = async () => {
       const storage = localStorage.getItem('chatUser');
+
+      //  if localstorage data, set user state to that
       if (storage) {
-        //  set user state to localstorage data
         dispatch({ type: 'SET_USER', payload: JSON.parse(storage) });
+
+        //  retrieve messages
         const userId = JSON.parse(storage).user_id;
-        dispatch({ type: 'SET_LOADING' });
-        //  retrieve user messages
         const messagesData = await getUserMessages(userId);
-        dispatch({ type: 'GET_USER_MESSAGES', payload: messagesData[0] });
-        //  retrieve user contacts
-        const contactsData = await getUserContacts(userId);
+        dispatch({ type: 'SET_USER_MESSAGES', payload: messagesData[0] });
+
+        //  retrieve contacts
+        const contactsData = await getSortedUserContacts(userId);
         if (contactsData[0].length > 0) {
           dispatch({
-            type: 'GET_USER_CONTACTS',
+            type: 'SET_USER_CONTACTS',
             payload: contactsData[0].map(contactData => {
               return {
                 name: contactData.name,
@@ -48,12 +50,15 @@ function ChatScreen() {
         }
         //  retrieve contact nicknames
         const nicknamesData = await getUserNicknames(userId);
-        dispatch({ type: 'GET_CONTACT_NICKNAMES', payload: nicknamesData });
+        dispatch({ type: 'SET_CONTACT_NICKNAMES', payload: nicknamesData });
+
+        //  redirect if no existing localStorage data
       } else {
         navigate('/sign-up');
       }
     };
-    checkUser();
+
+    checkIfUser();
   }, [dispatch, navigate]);
 
   return (

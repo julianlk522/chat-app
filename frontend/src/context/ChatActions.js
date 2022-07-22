@@ -31,7 +31,7 @@ export const getAllContacts = async () => {
   return await response.json();
 };
 
-export const getUserContacts = async userId => {
+export const getSortedUserContacts = async userId => {
   const response = await fetch(`${API_URL}/users/${userId}`, {
     headers: paramsHeaders,
   });
@@ -121,15 +121,6 @@ export const deleteMultipleMessages = async (userId, messageIdsString) => {
       userId,
       messageIdsString,
     }),
-  });
-
-  return await response.json();
-};
-
-export const getUserMostRecentMessagesFromContacts = async userId => {
-  const response = await fetch(`${API_URL}/messages/${userId}`, {
-    method: 'POST',
-    headers: paramsHeaders,
   });
 
   return await response.json();

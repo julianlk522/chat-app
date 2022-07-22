@@ -24,7 +24,7 @@ function MyChats() {
     const fetchContactsData = async () => {
       const contactsData = await getAllContacts();
       dispatch({
-        type: 'GET_ALL_CONTACTS',
+        type: 'SET_ALL_CONTACTS',
         payload: contactsData[0].filter(contact => {
           return (
             //  filter out user's contact data
@@ -249,7 +249,7 @@ function MyChats() {
               ) {
                 assignNewPreferedPic(state.user.user_id, preferedPicSelected);
                 dispatch({
-                  type: 'ASSIGN_NEW_PREFERED_PIC',
+                  type: 'SET_NEW_PREFERED_PIC',
                   payload: preferedPicSelected,
                 });
               }
