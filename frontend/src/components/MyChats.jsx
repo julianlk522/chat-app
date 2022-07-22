@@ -243,10 +243,6 @@ function MyChats() {
                 preferedPicSelected &&
                 preferedPicSelected !== state.user.prefered_pic
               ) {
-                console.log(
-                  'dispatch new prefered pic now!',
-                  preferedPicSelected
-                );
                 assignNewPreferedPic(state.user.user_id, preferedPicSelected);
                 dispatch({
                   type: 'ASSIGN_NEW_PREFERED_PIC',

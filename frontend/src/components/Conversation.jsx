@@ -240,11 +240,17 @@ function Conversation() {
           </button>
 
           <button className="mr-4 bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-            <MdCall className="mx-2" />
+            <MdCall
+              className="mx-2"
+              onClick={() => toast('Coming soon!', toastOptions)}
+            />
           </button>
 
           <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-            <MdVideoCall className="mx-2" />
+            <MdVideoCall
+              className="mx-2"
+              onClick={() => toast('Coming soon!', toastOptions)}
+            />
           </button>
         </div>
       </div>
@@ -311,7 +317,10 @@ function Conversation() {
             </button>
 
             <button className="bg-sky-600 hover:bg-sky-700 py-2 rounded-full text-white">
-              <MdAttachment className="mx-2 min-w-[1rem] min-h-[1rem]" />
+              <MdAttachment
+                className="mx-2 min-w-[1rem] min-h-[1rem]"
+                onClick={() => toast('Coming soon!', toastOptions)}
+              />
             </button>
           </div>
         )}

@@ -3,7 +3,6 @@ import ChatContext from '../context/ChatContext';
 import { assignNewNickname } from '../context/ChatActions';
 import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
 import { toast } from 'react-toastify';
-import { RiGhostSmileLine } from 'react-icons/ri';
 import { FiEdit2, FiCheckCircle } from 'react-icons/fi';
 import genericPic from '../assets/genericPic.jpg';
 import crazyGuyPic from '../assets/crazyGuyPic.jpg';
@@ -32,6 +31,9 @@ function ContactInfo() {
   const [newNickname, setNewNickname] = useState('');
   const [nicknameReadyToSubmit, setNicknameReadyToSubmit] = useState(false);
 
+  const [hideAlerts, setHideAlerts] = useState(false);
+  const [readReceipts, setReadReceipts] = useState(true);
+
   useEffect(() => {
     if (newNickname.length >= 4) setNicknameReadyToSubmit(true);
     else setNicknameReadyToSubmit(false);
@@ -45,7 +47,7 @@ function ContactInfo() {
     };
 
     const newNickNameResponse = await assignNewNickname(newNickNameData);
-    console.log(newNickNameResponse);
+
     dispatch({ type: 'ASSIGN_NEW_NICKNAME', payload: newNickNameResponse });
   };
 
@@ -129,17 +131,31 @@ function ContactInfo() {
         </div>
       </div>
 
-      <div id="settings" className="px-4 my-4 bg-slate-200 rounded-2xl">
+      <div id="settings" className="px-4 my-4 rounded-2xl shadow-md">
         <div id="hideAlerts" className="py-4 flex justify-between">
           <p>Hide Alerts</p>
-          <div className="w-[15%] bg-lime-500 rounded-2xl flex justify-end cursor-pointer">
+          <div
+            className={`transition ease-in-out w-8 rounded-2xl flex  cursor-pointer ${
+              hideAlerts
+                ? 'justify-end bg-lime-500'
+                : 'justify-start bg-slate-300'
+            }`}
+            onClick={() => setHideAlerts(!hideAlerts)}
+          >
             <div className="w-[60%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
           </div>
         </div>
-        <hr />
+        <hr className="bg-black h-1 opacity-10 rounded-2xl" />
         <div id="sendReadReceipts" className="py-4 flex justify-between">
           <p>Send Read Receipts</p>
-          <div className="w-[15%] bg-lime-500 rounded-2xl flex justify-end cursor-pointer">
+          <div
+            className={`transition ease-in-out w-8 rounded-2xl flex  cursor-pointer ${
+              readReceipts
+                ? 'justify-end bg-lime-500'
+                : 'justify-start bg-slate-300'
+            }`}
+            onClick={() => setReadReceipts(!readReceipts)}
+          >
             <div className="w-[60%] bg-white rounded-2xl border-solid border-[1px] border-slate-300"></div>
           </div>
         </div>
@@ -147,17 +163,23 @@ function ContactInfo() {
 
       <div id="timeline">
         <h4 className="m-8 text-center">
-          Timeline of {selectedContactName ?? ''}
+          Timeline of {selectedContactName ?? 'Your contact'}
         </h4>
 
-        <div
-          id="photosContainer"
-          className="px-4 my-4 bg-slate-200 rounded-2xl"
-        >
+        <div id="photosContainer" className="px-4 my-4 rounded-2xl shadow-md">
           <p className="py-4">Photos and Videos</p>
-          <hr />
-          <div id="photos" className="py-4 flex justify-center">
-            <RiGhostSmileLine />
+          <hr className="bg-black h-1 opacity-10 rounded-2xl" />
+          <div id="photos" className="py-4 flex justify-center overflow-hidden">
+            <img
+              src={trexPic}
+              alt="sent by contact"
+              className="w-[47.5%] object-contain mr-[5%]"
+            />
+            <img
+              src={gorfPic}
+              alt="sent by contact"
+              className="w-[47.5%] object-contain"
+            />
           </div>
         </div>
       </div>

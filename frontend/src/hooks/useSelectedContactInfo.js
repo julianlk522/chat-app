@@ -41,9 +41,9 @@ export const useSelectedContactInfo = () => {
         : []
     );
     setSelectedContactNickname(
-      state.nicknames.filter(nickname => {
+      state?.nicknames?.filter(nickname => {
         return nickname.contact_id === selectedContactId;
-      })[0]?.nickname ?? null
+      })[0]?.nickname
     );
     setSelectedContactName(selectedContact?.name);
     setSelectedContactPreferedPic(selectedContact?.prefered_pic);
