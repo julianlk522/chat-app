@@ -54,7 +54,7 @@ function ChatScreen() {
 
         //  redirect if no existing localStorage data
       } else {
-        navigate('/sign-up');
+        navigate('/auth');
       }
     };
 

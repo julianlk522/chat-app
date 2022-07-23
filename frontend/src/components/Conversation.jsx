@@ -230,7 +230,7 @@ function Conversation() {
             </h3>
           ) : (
             <h3 id="noContactInfo" className="text-md mx-4">
-              Your next contact's info will appear here!
+              Your next contact's name will appear here!
             </h3>
           )}
         </div>

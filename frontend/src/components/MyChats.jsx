@@ -226,7 +226,7 @@ function MyChats() {
               e.preventDefault();
               dispatch({ type: 'LOGOUT_USER' });
               localStorage.removeItem('chatUser');
-              navigate('/sign-in');
+              navigate('/auth');
             }}
           >
             Logout

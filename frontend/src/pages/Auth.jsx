@@ -4,9 +4,10 @@ import { createNewUser, loginUser } from '../context/ChatActions';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaArrowRight } from 'react-icons/fa';
+import { FcCancel } from 'react-icons/fc';
 import visibilityIcon from '../assets/visibilityIcon.svg';
 
-function SignIn() {
+function Auth() {
   const toastOptions = {
     autoClose: 4000,
     position: toast.POSITION.BOTTOM_RIGHT,
@@ -39,20 +40,15 @@ function SignIn() {
   }, [isSignUp, onInputChange]);
 
   const checkReadyForSubmit = () => {
-    console.log('checking');
     if (username.length >= 6 && password.length >= 6) {
       if (!isSignUp) {
-        console.log('sign in with 6u and 6p');
         return setReadyForSubmit(true);
       } else if (name.length <= 3) {
-        console.log('sign up with 3n or less');
         return setReadyForSubmit(false);
       } else {
-        console.log('sign up and enough of all');
         return setReadyForSubmit(true);
       }
     } else {
-      console.log('u or p not long enough');
       setReadyForSubmit(false);
     }
   };
@@ -83,22 +79,22 @@ function SignIn() {
   return (
     <>
       <div
-        id="bgWrapperMask"
-        className="bg-black h-full w-full z-[-1] fixed opacity-60"
+        id="bgImgMask"
+        className="bg-gradient-to-b from-slate-400 to-black h-full w-full z-[-1] fixed opacity-75"
       ></div>
       <div
         // bg image source: Priscilla Du Preez https://unsplash.com/photos/sOdldNCQEtU
-        id="bgWrapper"
+        id="bgImg"
         className="bg-authBg bg-auto h-full w-full z-[-2] fixed opacity-40"
       ></div>
-      <div className="flex flex-col h-full text-center px-8 bg-slate-100 bg-opacity-25 mx-60">
+      <div className="flex flex-col justify-evenly h-full text-center px-8 bg-slate-100 bg-opacity-25 mx-48">
         <header>
-          <p id="header" className="text-4xl text-white font-extrabold m-12">
+          <p id="header" className="text-6xl text-white font-extrabold m-12">
             {isSignUp ? 'Welcome!' : 'Welcome back!'}
           </p>
-          <p className="text-white my-4">
+          <p className="text-white text-xl my-4">
             {isSignUp
-              ? 'Fill out the form below to sign up and start chatting'
+              ? 'Enter your name, username and password below to sign up and start chatting'
               : 'Enter your username and password below to sign-in'}
           </p>
         </header>
@@ -140,40 +136,50 @@ function SignIn() {
             />
           </div>
 
-          <div className="flex justify-evenly items-center my-8">
-            <p className="text-2xl text-sky-500 font-bold">
-              {isSignUp ? 'Sign Up' : 'Sign In'}
-            </p>
+          <div
+            id="actionsDiv"
+            className="flex justify-evenly items-center my-8"
+          >
             <button
-              className={`flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 border-opacity-50 ${
-                readyForSubmit
-                  ? 'bg-sky-500 cursor-pointer hover:scale-110'
-                  : 'bg-slate-300'
+              type="submit"
+              className={`flex justify-evenly items-center  bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 ${
+                readyForSubmit && 'cursor-pointer hover:scale-110'
               }`}
               disabled={!readyForSubmit}
             >
-              <FaArrowRight fill="white" width="2rem" height="2rem" />
+              <p
+                className={`font-bold ${
+                  readyForSubmit
+                    ? 'text-lime-500 text-4xl'
+                    : 'text-slate-200 text-2xl'
+                }`}
+              >
+                {isSignUp ? 'Sign Up' : 'Sign In'}
+              </p>
+              {readyForSubmit ? (
+                <FaArrowRight
+                  fill="white"
+                  className="ml-4 w-8 h-8 rounded-full bg-opacity-50 bg-lime-500 border-2 border-slate-200 border-opacity-25"
+                />
+              ) : (
+                <FcCancel fill="red" className="ml-4 w-8 h-8 rounded-full" />
+              )}
+            </button>
+            <button
+              type="button"
+              id="relocateButton"
+              className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
+              onClick={() => setIsSignUp(!isSignUp)}
+            >
+              <p className="text-slate-200 text-sm font-semibold m-2">
+                {`Take me to ${isSignUp ? 'Sign In' : 'Sign Up'} instead`}
+              </p>
             </button>
           </div>
         </form>
-
-        <div
-          id="relocateButtonDiv"
-          className="flex justify-center items-center"
-        >
-          <button
-            id="relocateButton"
-            className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
-            onClick={() => setIsSignUp(!isSignUp)}
-          >
-            <p className="text-slate-200 text-sm font-semibold m-2">
-              {`Take me to ${isSignUp ? 'Sign In' : 'Sign Up'} instead`}
-            </p>
-          </button>
-        </div>
       </div>
     </>
   );
 }
 
-export default SignIn;
+export default Auth;

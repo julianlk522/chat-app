@@ -4,8 +4,7 @@ import { ContextProvider } from './context/ChatContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatScreen from './pages/ChatScreen';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
+import Auth from './pages/Auth';
 
 function App() {
   return (
@@ -14,8 +13,7 @@ function App() {
         <ToastContainer />
         <Routes>
           <Route path="/" element={<ChatScreen />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/auth" element={<Auth />} />
         </Routes>
       </Router>
     </ContextProvider>
