@@ -1,23 +1,22 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import ChatContext from '../context/ChatContext';
-import { useNavigate } from 'react-router-dom';
-import { assignNewPreferedPic, getAllContacts } from '../context/ChatActions';
+import { getAllContacts } from '../context/ChatActions';
 import Contact from './Contact';
-import genericPic from '../assets/genericPic.jpg';
-import crazyGuyPic from '../assets/crazyGuyPic.jpg';
-import trexPic from '../assets/trexPic.jpg';
-import gorfPic from '../assets/gorfPic.jpg';
+import Select from 'react-select';
+import { sortContactsArrByRecentMessages } from './utils/sortContactsArrByRecentMessages';
 import { MdAdd } from 'react-icons/md';
 import { FiMinus } from 'react-icons/fi';
-import Select from 'react-select';
+import UserInfo from './UserInfo';
 
 function MyChats() {
+  const scrollRef = useRef(null);
+
   const { state, dispatch } = useContext(ChatContext);
-  const navigate = useNavigate();
+  const userContactsIds = state.userContacts.map(userContact => {
+    return userContact.user_id;
+  });
 
   const [readyToInputNewContacts, setReadyToInputNewContacts] = useState(false);
-  const [editPreferedPic, setEditPreferedPic] = useState(false);
-  const [preferedPicSelected, setPreferedPicSelected] = useState(null);
 
   //  fetch contact data on load
   useEffect(() => {
@@ -41,18 +40,10 @@ function MyChats() {
     setReadyToInputNewContacts(false);
   }, [state.userContacts]);
 
-  //  sort contacts based on recentMessage age
-  const handleSort = userContactArr => {
-    return userContactArr.sort((a, b) => {
-      if (a.recentMessage?.created_at > b.recentMessage?.created_at) return -1;
-      if (b.recentMessage?.created_at > a.recentMessage?.created_at) return 1;
-      else return 0;
-    });
-  };
-
-  const userContactsIds = state.userContacts.map(userContact => {
-    return userContact.user_id;
-  });
+  // scroll contacts list to the top when the messages state changes
+  useEffect(() => {
+    scrollRef.current.scrollIntoView(false);
+  }, [state.messages]);
 
   return (
     <div
@@ -122,149 +113,27 @@ function MyChats() {
           className="w-full overflow-y-scroll"
           onClick={() => setReadyToInputNewContacts(false)}
         >
+          <div id="scrollRefDiv" ref={scrollRef}></div>
           {state.userContacts?.length ? (
-            handleSort(state.userContacts).map((contact, idx) => {
-              return (
-                <Contact
-                  key={idx}
-                  name={contact.name}
-                  id={contact.user_id}
-                  recentMessage={contact.recentMessage}
-                  prefered_pic={contact.prefered_pic}
-                />
-              );
-            })
+            sortContactsArrByRecentMessages(state.userContacts).map(
+              (contact, idx) => {
+                return (
+                  <Contact
+                    key={idx}
+                    name={contact.name}
+                    id={contact.user_id}
+                    recentMessage={contact.recentMessage}
+                    prefered_pic={contact.prefered_pic}
+                  />
+                );
+              }
+            )
           ) : (
             <p className="my-8 text-center">No contacts yet.</p>
           )}
         </div>
       </div>
-      <div
-        id="userProfileArea"
-        className="py-4 flex flex-col justify-evenly items-center w-full h-[20%] border-t-2 border-t-slate-300"
-      >
-        {!editPreferedPic ? (
-          <div
-            id="nameAndPicDiv"
-            className="flex justify-evenly items-center mb-4"
-          >
-            <img
-              src={
-                state.user.prefered_pic === 1
-                  ? trexPic
-                  : state.user.prefered_pic === 2
-                  ? gorfPic
-                  : state.user.prefered_pic === 3
-                  ? crazyGuyPic
-                  : genericPic
-              }
-              alt="profile pic"
-              className="rounded-full w-16 h-16 object-cover border-2 border-slate-300 border-opacity-50 hover:opacity-50 cursor-pointer"
-              onClick={() => setEditPreferedPic(!editPreferedPic)}
-            />
-
-            <p id="userName" className="text-xl text-center font-bold ml-8">
-              {state.user.name}
-            </p>
-          </div>
-        ) : (
-          <div
-            id="profilePicSelectionDiv"
-            className="flex justify-evenly items-center w-full"
-          >
-            <img
-              src={trexPic}
-              alt="pic1"
-              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
-                preferedPicSelected === 1 && 'opacity-100'
-              }`}
-              onClick={() => {
-                if (preferedPicSelected !== 1) setPreferedPicSelected(1);
-                else setPreferedPicSelected(null);
-              }}
-            />
-
-            <img
-              src={gorfPic}
-              alt="pic2"
-              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
-                preferedPicSelected === 2 && 'opacity-100'
-              }`}
-              onClick={() => {
-                if (preferedPicSelected !== 2) setPreferedPicSelected(2);
-                else setPreferedPicSelected(null);
-              }}
-            />
-            <img
-              src={crazyGuyPic}
-              alt="pic3"
-              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
-                preferedPicSelected === 3 && 'opacity-100'
-              }`}
-              onClick={() => {
-                if (preferedPicSelected !== 3) setPreferedPicSelected(3);
-                else setPreferedPicSelected(null);
-              }}
-            />
-            <img
-              src={genericPic}
-              alt="pic4"
-              className={`rounded-full w-12 h-12 object-cover border-2 border-slate-300 border-opacity-50 opacity-50 ${
-                preferedPicSelected === 4 && 'opacity-100'
-              }`}
-              onClick={() => {
-                if (preferedPicSelected !== 4) setPreferedPicSelected(4);
-                else setPreferedPicSelected(null);
-              }}
-            />
-          </div>
-        )}
-        {!editPreferedPic ? (
-          <button
-            className="focus:outline-none rounded-2xl bg-red-600 hover:bg-red-700 p-2 w-1/3 text-white"
-            onClick={e => {
-              e.preventDefault();
-              dispatch({ type: 'LOGOUT_USER' });
-              localStorage.removeItem('chatUser');
-              navigate('/auth');
-            }}
-          >
-            Logout
-          </button>
-        ) : (
-          <button
-            className={`rounded-2xl p-2 text-white ${
-              !editPreferedPic && 'w-1/3'
-            } ${
-              editPreferedPic &&
-              preferedPicSelected !== null &&
-              preferedPicSelected !== state.user.prefered_pic
-                ? 'bg-lime-500'
-                : 'bg-red-600 hover:bg-red-700'
-            }`}
-            onClick={() => {
-              if (
-                editPreferedPic &&
-                preferedPicSelected &&
-                preferedPicSelected !== state.user.prefered_pic
-              ) {
-                assignNewPreferedPic(state.user.user_id, preferedPicSelected);
-                dispatch({
-                  type: 'SET_NEW_PREFERED_PIC',
-                  payload: preferedPicSelected,
-                });
-              }
-              setEditPreferedPic(!editPreferedPic);
-              setPreferedPicSelected(null);
-            }}
-          >
-            {preferedPicSelected &&
-            preferedPicSelected !== state.user.prefered_pic
-              ? 'Confirm new avatar selection'
-              : 'Actually I like this avatar'}
-          </button>
-        )}
-      </div>
+      <UserInfo />
     </div>
   );
 }
