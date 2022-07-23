@@ -217,7 +217,7 @@ function Conversation() {
               </span>
             </div>
           ) : selectedContactId ? (
-            <h3 id="lastActive" className="text-sm mx-4">
+            <h3 id="lastActive" className="text-xs text-center mx-4">
               last active:
               <span id="formattedLastActive" className="mx-2">
                 {selectedContactLastActive
@@ -293,7 +293,6 @@ function Conversation() {
         className="bg-slate-200 self-end w-full h-[10vh] flex justify-between items-center p-8"
       >
         <input
-          type="text"
           value={newMessage}
           placeholder="Type something to send..."
           autoComplete="off"

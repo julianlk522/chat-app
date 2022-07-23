@@ -233,7 +233,9 @@ function MyChats() {
           </button>
         ) : (
           <button
-            className={`rounded-2xl p-2 ${!editPreferedPic && 'w-1/3'} ${
+            className={`rounded-2xl p-2 text-white ${
+              !editPreferedPic && 'w-1/3'
+            } ${
               editPreferedPic &&
               preferedPicSelected !== null &&
               preferedPicSelected !== state.user.prefered_pic

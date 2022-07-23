@@ -2,15 +2,12 @@ import React, { useContext } from 'react';
 import ChatContext from '../context/ChatContext';
 import { readContactMessages } from '../context/ChatActions';
 import { formatDistanceToNowStrict } from 'date-fns';
-import genericPic from '../assets/genericPic.jpg';
-import crazyGuyPic from '../assets/crazyGuyPic.jpg';
-import trexPic from '../assets/trexPic.jpg';
-import gorfPic from '../assets/gorfPic.jpg';
+import { fetchPreferedPic } from './utils/fetchPreferedPic';
 
 function Contact({ name, id, recentMessage, prefered_pic }) {
   const { state, dispatch } = useContext(ChatContext);
 
-  const selectedContactId = state.selectedContact ?? null;
+  const selectedContactId = state?.selectedContact;
   const userId = state.user.user_id;
 
   return (
@@ -26,15 +23,7 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
       }}
     >
       <img
-        src={
-          prefered_pic === 1
-            ? trexPic
-            : prefered_pic === 2
-            ? gorfPic
-            : prefered_pic === 3
-            ? crazyGuyPic
-            : genericPic
-        }
+        src={fetchPreferedPic(prefered_pic)}
         alt="profile pic"
         className="rounded-full w-8 h-8 object-cover border-2 border-slate-300 border-opacity-50 mr-4"
       />

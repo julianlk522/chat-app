@@ -102,6 +102,7 @@ function Auth() {
         <form onSubmit={onSubmit}>
           {isSignUp && (
             <input
+              autoComplete="off"
               className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
               placeholder="Name"
               id="name"
@@ -111,6 +112,7 @@ function Auth() {
           )}
 
           <input
+            autoComplete="off"
             className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
             placeholder="Username"
             id="username"
@@ -120,6 +122,7 @@ function Auth() {
 
           <div id="passwordDiv" className="flex items-center relative">
             <input
+              autoComplete="off"
               type={showPassword ? 'text' : 'password'}
               className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
               placeholder="Password"
