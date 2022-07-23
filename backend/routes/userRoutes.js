@@ -1,6 +1,6 @@
 import express from 'express'
 import {
-	getUsers,
+	getAllUsers,
 	newUser,
 	loginUser,
 	getSortedUserContacts,
@@ -10,7 +10,7 @@ import {
 } from '../controllers/usersController.js'
 const router = express.Router()
 
-router.route('/').get(getUsers).post(newUser)
+router.route('/').get(getAllUsers).post(newUser)
 
 router.route('/login').post(loginUser)
 

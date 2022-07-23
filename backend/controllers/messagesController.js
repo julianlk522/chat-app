@@ -1,7 +1,7 @@
 import db from '../config/db.js'
 import asyncHandler from 'express-async-handler'
 
-export const getMessages = asyncHandler(async (req, res) => {
+export const getAllMessages = asyncHandler(async (req, res) => {
 	const sql = 'SELECT * FROM messages;'
 
 	const messageData = await db.query(sql)
@@ -102,6 +102,11 @@ export const newMessage = asyncHandler(async (req, res) => {
 
 		const updatedMessageData = await db.query(selectUpdatedMessagesSql)
 		res.status(200).json(updatedMessageData)
+	} else {
+		res.status(400)
+		throw new Error(
+			`Either senderId or receiverId invalid, senderId: ${senderId}, receiverId: ${receiverId}`
+		)
 	}
 })
 

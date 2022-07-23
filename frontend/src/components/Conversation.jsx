@@ -39,7 +39,6 @@ function Conversation() {
     selectedContactLastActive,
     selectedContactMessages,
   } = useSelectedContactInfo();
-
   const queuedForDeleteArray = state.queuedForDelete;
 
   //  local state
@@ -54,17 +53,68 @@ function Conversation() {
 
   useEffect(() => {
     const randomlyAssignOnlineStatus = () => {
-      //  for demonstration, we assume there is an 80% chance a contact is online
+      //  if not an existing contact then return false
+      const selectedContactIsAnExistingContact = state.userContacts.some(
+        userContact => userContact.user_id === selectedContactId
+      );
+
+      //  for demonstration, we assume there is an 80% chance an existing contact is online
       const onlineScore = Math.random();
-      if (onlineScore > 0.2) setRandomlyOnline(true);
+      if (selectedContactIsAnExistingContact && onlineScore > 0.2)
+        setRandomlyOnline(true);
       else setRandomlyOnline(false);
     };
     randomlyAssignOnlineStatus();
+    // eslint-disable-next-line
   }, [selectedContactId]);
 
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [selectedContactMessages]);
+
+  const submitMessage = async () => {
+    dispatch({ type: 'SET_LOADING' });
+
+    const updatedMessages = await createNewMessage(
+      currentUserId,
+      selectedContactId,
+      newMessage
+    );
+    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
+    updateUserContacts();
+    setNewMessage('');
+  };
+
+  //  delete one or multiple messages
+  const deleteMessages = async () => {
+    dispatch({ type: 'SET_LOADING' });
+
+    //  case for one deletion
+    if (queuedForDeleteArray.length === 1) {
+      const messagesMinusOne = await deleteMessage(
+        currentUserId,
+        queuedForDeleteArray[0].toString()
+      );
+      dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne[0] });
+
+      //  case for multiple deletion
+    } else {
+      const messagesMinusSeveral = await deleteMultipleMessages(
+        currentUserId,
+        queuedForDeleteArray.toString()
+      );
+      dispatch({
+        type: 'DELETE_MESSAGE',
+        payload: messagesMinusSeveral[0],
+      });
+    }
+    updateUserContacts();
+    checkIfAllMessagesDeleted();
+    setNewMessage('');
+    setEditMode(false);
+    setConfirmDelete(false);
+    dispatch({ type: 'RESET_DELETION_CUE' });
+  };
 
   const onNewMessageChange = e => {
     //  no quote chars allowed so MySQL stays happy
@@ -115,6 +165,7 @@ function Conversation() {
       }
     );
 
+    //  if all messages from a contact deleted, set the selected contact to the next one on the list
     if (deletedAllMessages) {
       const nextContactOnSortedList = state.userContacts.sort((a, b) => {
         if (a.recentMessage?.created_at > b.recentMessage?.created_at)
@@ -130,50 +181,6 @@ function Conversation() {
     }
   };
 
-  const submitMessage = async () => {
-    dispatch({ type: 'SET_LOADING' });
-
-    const updatedMessages = await createNewMessage(
-      currentUserId,
-      selectedContactId,
-      newMessage
-    );
-    dispatch({ type: 'NEW_MESSAGE', payload: updatedMessages[0] });
-    updateUserContacts();
-    setNewMessage('');
-  };
-
-  //  delete one or multiple messages
-  const deleteMessages = async () => {
-    dispatch({ type: 'SET_LOADING' });
-
-    //  case for one deletion
-    if (queuedForDeleteArray.length === 1) {
-      const messagesMinusOne = await deleteMessage(
-        currentUserId,
-        queuedForDeleteArray[0].toString()
-      );
-      dispatch({ type: 'DELETE_MESSAGE', payload: messagesMinusOne[0] });
-
-      //  case for multiple deletion
-    } else {
-      const messagesMinusSeveral = await deleteMultipleMessages(
-        currentUserId,
-        queuedForDeleteArray.toString()
-      );
-      dispatch({
-        type: 'DELETE_MESSAGE',
-        payload: messagesMinusSeveral[0],
-      });
-    }
-    updateUserContacts();
-    checkIfAllMessagesDeleted();
-    setNewMessage('');
-    setEditMode(false);
-    setConfirmDelete(false);
-    dispatch({ type: 'RESET_DELETION_CUE' });
-  };
-
   return (
     <div
       id="conversation"
@@ -185,47 +192,48 @@ function Conversation() {
           state?.contacts?.length ? 'justify-between' : 'justify-end'
         }`}
       >
-        {state.userContacts.length > 0 && (
-          <div id="recipientNameArea" className="flex flex-grow items-center">
-            <h3 className="text-2xl mr-4">
-              {selectedContactNickname
-                ? selectedContactNickname
-                : selectedContactName
-                ? selectedContactName
-                : state?.contacts?.filter(contact => {
-                    return contact.user_id === selectedContactId;
-                  })[0]?.name ?? ''}
-            </h3>
+        <div id="recipientNameArea" className="flex flex-grow items-center">
+          <h3 className="text-2xl mr-4">
+            {selectedContactNickname
+              ? selectedContactNickname
+              : selectedContactName
+              ? selectedContactName
+              : state?.contacts?.filter(contact => {
+                  return contact.user_id === selectedContactId;
+                })[0]?.name}
+          </h3>
 
-            {selectedContactLastActive && randomlyOnline ? (
+          {selectedContactLastActive && randomlyOnline ? (
+            <div
+              id="infoIfContactOnlineDiv"
+              className="flex justify-center items-center"
+            >
               <div
-                id="infoIfContactOnlineDiv"
-                className="flex justify-center items-center"
-              >
-                <div
-                  id="onlineStatus"
-                  className="w-4 h-4 mx-4 rounded-full bg-lime-500"
-                ></div>
-                <span id="typingStatus" className="mx-4">
-                  typing...
-                </span>
-              </div>
-            ) : (
-              <h3 id="lastActive" className="text-sm mx-4">
-                last active:
-                <span id="formattedLastActive" className="mx-2">
-                  {selectedContactLastActive
-                    ? formatDistanceToNowStrict(
-                        new Date(selectedContactLastActive)
-                      ) + ' '
-                    : '2 hours '}
-                  ago
-                </span>
-              </h3>
-            )}
-          </div>
-        )}
-
+                id="onlineStatus"
+                className="w-4 h-4 mx-4 rounded-full bg-lime-500"
+              ></div>
+              <span id="typingStatus" className="mx-4">
+                typing...
+              </span>
+            </div>
+          ) : selectedContactId ? (
+            <h3 id="lastActive" className="text-sm mx-4">
+              last active:
+              <span id="formattedLastActive" className="mx-2">
+                {selectedContactLastActive
+                  ? formatDistanceToNowStrict(
+                      new Date(selectedContactLastActive)
+                    ) + ' '
+                  : '2 hours '}
+                ago
+              </span>
+            </h3>
+          ) : (
+            <h3 id="noContactInfo" className="text-md mx-4">
+              Your next contact's info will appear here!
+            </h3>
+          )}
+        </div>
         <div id="conversationOptions" className="flex">
           <button
             className={`mr-4 ${

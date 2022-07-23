@@ -56,12 +56,12 @@ function MyChats() {
 
   return (
     <div
-      id="myChatsBody"
+      id="myChatsContainer"
       className="flex flex-grow flex-col justify-between max-w-[30%]"
     >
       <div
-        id="contactsList"
-        className="flex flex-col justify-center items-center overflow-hidden"
+        id="myChatsBody"
+        className="flex flex-col grow items-center overflow-hidden"
       >
         <div
           id="myChatsTitleDiv"
@@ -101,7 +101,6 @@ function MyChats() {
                   label: contact.name,
                 };
               })}
-            closeMenuOnSelect
             placeholder="Select a contact to add"
             noOptionsMessage={() => 'No contacts found with specified name'}
             onChange={e => {
@@ -120,7 +119,7 @@ function MyChats() {
         {/* contacts list */}
         <div
           id="contactsList"
-          className="overflow-y-scroll"
+          className="w-full overflow-y-scroll"
           onClick={() => setReadyToInputNewContacts(false)}
         >
           {state.userContacts?.length ? (
@@ -136,7 +135,7 @@ function MyChats() {
               );
             })
           ) : (
-            <p>No contacts yet.</p>
+            <p className="my-8 text-center">No contacts yet.</p>
           )}
         </div>
       </div>

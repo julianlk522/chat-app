@@ -1,20 +1,11 @@
 import db from '../config/db.js'
 import asyncHandler from 'express-async-handler'
 
-export const getUsers = asyncHandler(async (req, res) => {
+export const getAllUsers = asyncHandler(async (req, res) => {
 	const sql = 'SELECT * FROM users;'
 
 	const userData = await db.query(sql)
 	res.status(200).json(userData)
-})
-
-export const getSortedUserContacts = asyncHandler(async (req, res) => {
-	if (!req.params.userId) throw new Error('No user ID provided')
-
-	const sql = `SELECT name, user_id, prefered_pic, last_active, messages.content, messages.created_at, messages.seen, messages.sender_id FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name ORDER BY created_at DESC;`
-
-	const contactsData = await db.query(sql)
-	res.status(200).json(contactsData)
 })
 
 export const newUser = asyncHandler(async (req, res) => {
@@ -95,6 +86,15 @@ export const loginUser = asyncHandler(async (req, res) => {
 	}
 })
 
+export const getSortedUserContacts = asyncHandler(async (req, res) => {
+	if (!req.params.userId) throw new Error('No user ID provided')
+
+	const sql = `SELECT name, user_id, prefered_pic, last_active, messages.content, messages.created_at, messages.seen, messages.sender_id FROM users JOIN messages ON (user_id = messages.sender_id OR user_id = messages.receiver_id) WHERE user_id != ${req.params.userId} AND (messages.sender_id = ${req.params.userId} OR messages.receiver_id = ${req.params.userId}) GROUP BY name ORDER BY created_at DESC;`
+
+	const contactsData = await db.query(sql)
+	res.status(200).json(contactsData)
+})
+
 export const getUserNicknames = asyncHandler(async (req, res) => {
 	if (!req.params.userId) {
 		res.status(400).json({ error: 'No user ID provided' })
@@ -121,20 +121,20 @@ export const assignNewNickname = asyncHandler(async (req, res) => {
 		)
 	}
 
-	//	check if the assigner has already assigned the contact a name, if so replace it
+	//	check whether the user has assigned the contact a nickname before
 
 	const searchNicknamesSql = `SELECT * FROM nicknames WHERE assigner_id = ${user_id} AND contact_id = ${contact_id}`
 
 	const nicknameSearchResponse = await db.query(searchNicknamesSql)
 
+	//	if not an existing nickname, add one
 	if (nicknameSearchResponse[0][0] === undefined) {
-		//	no nicknames, add one
 		const newNicknameSql = `INSERT INTO nicknames (assigner_id, contact_id, nickname) VALUES (${user_id}, ${contact_id}, '${nickname}');`
 
 		db.query(newNicknameSql)
 		console.log('new nickname')
+		//	if existing nickname, overwrite it
 	} else {
-		//	existing nickname, overwrite it
 		const overWriteNicknameSql = `UPDATE nicknames SET nickname = '${nickname}' WHERE assigner_id = ${user_id} AND contact_id = ${contact_id}`
 
 		db.query(overWriteNicknameSql)

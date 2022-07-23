@@ -2,14 +2,18 @@ import express from 'express'
 import {
 	deleteMessage,
 	deleteMultipleMessages,
-	getMessages,
+	getAllMessages,
 	getUserMessages,
 	newMessage,
 	readContactMessages,
 } from '../controllers/messagesController.js'
 const router = express.Router()
 
-router.route('/').get(getMessages).post(newMessage).patch(readContactMessages)
+router
+	.route('/')
+	.get(getAllMessages)
+	.post(newMessage)
+	.patch(readContactMessages)
 
 router.route('/:userId').get(getUserMessages)
 

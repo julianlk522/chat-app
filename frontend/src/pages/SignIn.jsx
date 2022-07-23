@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
-import { loginUser } from '../context/ChatActions';
-import { Link, useNavigate } from 'react-router-dom';
+import { createNewUser, loginUser } from '../context/ChatActions';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaArrowRight } from 'react-icons/fa';
 import visibilityIcon from '../assets/visibilityIcon.svg';
@@ -12,27 +12,19 @@ function SignIn() {
     position: toast.POSITION.BOTTOM_RIGHT,
   };
 
+  const navigate = useNavigate();
+  const { dispatch } = useContext(ChatContext);
+
   const [showPassword, setShowPassword] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
+    name: '',
     username: '',
     password: '',
   });
   const [readyForSubmit, setReadyForSubmit] = useState(false);
 
-  const { username, password } = formData;
-
-  //  check for submit disabled on username/password change
-  useEffect(() => {
-    const checkReadyForSubmit = () => {
-      if (username.length >= 6 && password.length >= 6) {
-        setReadyForSubmit(true);
-      } else setReadyForSubmit(false);
-    };
-    checkReadyForSubmit();
-  }, [username, password]);
-
-  const navigate = useNavigate();
-  const { dispatch } = useContext(ChatContext);
+  const { name, username, password } = formData;
 
   const onInputChange = e => {
     setFormData(prevState => ({
@@ -41,20 +33,51 @@ function SignIn() {
     }));
   };
 
+  useEffect(() => {
+    checkReadyForSubmit();
+    // eslint-disable-next-line
+  }, [isSignUp, onInputChange]);
+
+  const checkReadyForSubmit = () => {
+    console.log('checking');
+    if (username.length >= 6 && password.length >= 6) {
+      if (!isSignUp) {
+        console.log('sign in with 6u and 6p');
+        return setReadyForSubmit(true);
+      } else if (name.length <= 3) {
+        console.log('sign up with 3n or less');
+        return setReadyForSubmit(false);
+      } else {
+        console.log('sign up and enough of all');
+        return setReadyForSubmit(true);
+      }
+    } else {
+      console.log('u or p not long enough');
+      setReadyForSubmit(false);
+    }
+  };
+
   const onSubmit = async e => {
     e.preventDefault();
     dispatch({ type: 'SET_LOADING' });
 
-    const loginData = await loginUser(formData);
+    if (isSignUp) {
+      const signUpData = await createNewUser(formData);
+      if (signUpData.error) {
+        toast.error(`Error: ${signUpData.error}`, toastOptions);
+      } else {
+        localStorage.setItem('chatUser', JSON.stringify(signUpData));
+      }
+    } else {
+      const loginData = await loginUser({ username, password });
 
-    //  if error show user a toast
-    if (loginData.error) {
-      toast.error(`Error: ${loginData.error}`, toastOptions);
-    } //  else set localstorage user info
-    else {
-      localStorage.setItem('chatUser', JSON.stringify(loginData));
-      navigate('/');
+      if (loginData.error) {
+        toast.error(`Error: ${loginData.error}`, toastOptions);
+      } else {
+        localStorage.setItem('chatUser', JSON.stringify(loginData));
+      }
     }
+    navigate('/');
   };
 
   return (
@@ -71,14 +94,26 @@ function SignIn() {
       <div className="flex flex-col h-full text-center px-8 bg-slate-100 bg-opacity-25 mx-60">
         <header>
           <p id="header" className="text-4xl text-white font-extrabold m-12">
-            Welcome back!
+            {isSignUp ? 'Welcome!' : 'Welcome back!'}
           </p>
           <p className="text-white my-4">
-            Enter your username and password below to sign-in
+            {isSignUp
+              ? 'Fill out the form below to sign up and start chatting'
+              : 'Enter your username and password below to sign-in'}
           </p>
         </header>
 
         <form onSubmit={onSubmit}>
+          {isSignUp && (
+            <input
+              className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
+              placeholder="Name"
+              id="name"
+              value={name}
+              onChange={onInputChange}
+            />
+          )}
+
           <input
             className="shadow-md border-none bg-slate-200 rounded-2xl h-12 w-full outline-none px-12 my-8"
             placeholder="Username"
@@ -106,7 +141,9 @@ function SignIn() {
           </div>
 
           <div className="flex justify-evenly items-center my-8">
-            <p className="text-2xl text-sky-500 font-bold">Sign in</p>
+            <p className="text-2xl text-sky-500 font-bold">
+              {isSignUp ? 'Sign Up' : 'Sign In'}
+            </p>
             <button
               className={`flex justify-center items-center w-12 h-12 rounded-full border-2 border-slate-200 border-opacity-50 ${
                 readyForSubmit
@@ -120,17 +157,18 @@ function SignIn() {
           </div>
         </form>
 
-        <div id="signUpDiv" className="flex justify-center items-center ">
+        <div
+          id="relocateButtonDiv"
+          className="flex justify-center items-center"
+        >
           <button
-            id="signUpLink"
+            id="relocateButton"
             className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
+            onClick={() => setIsSignUp(!isSignUp)}
           >
-            <Link
-              to="/sign-up"
-              className="max-w-[50%] text-slate-200 text-sm font-semibold mt-20"
-            >
-              Take me to Sign Up instead
-            </Link>
+            <p className="text-slate-200 text-sm font-semibold m-2">
+              {`Take me to ${isSignUp ? 'Sign In' : 'Sign Up'} instead`}
+            </p>
           </button>
         </div>
       </div>

@@ -28,7 +28,7 @@ function Message({
     <>
       {senderId !== currentUserId ? (
         //  not user's message
-        <div className="flex items-center">
+        <div className="flex grow items-center">
           <img
             src={
               selectedContactPreferedPic === 1

@@ -21,7 +21,7 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
       onClick={async () => {
         dispatch({ type: 'SET_SELECTED_CONTACT', payload: id });
         await readContactMessages(userId, id);
-        dispatch({ type: 'READ_CONTACT_MESSAGE', payload: id });
+        dispatch({ type: 'MARK_MESSAGES_AS_READ', payload: id });
         dispatch({ type: 'RESET_DELETION_CUE' });
       }}
     >

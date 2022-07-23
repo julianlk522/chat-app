@@ -30,8 +30,13 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         userContacts: action.payload,
-        selectedContact: action.payload[0].user_id,
+        selectedContact: action.payload[0]?.user_id,
         loading: false,
+      };
+    case 'SET_SELECTED_CONTACT':
+      return {
+        ...state,
+        selectedContact: action.payload,
       };
     case 'SET_USER_MESSAGES':
       return {
@@ -71,7 +76,7 @@ const chatReducer = (state, action) => {
         messages: action.payload,
         loading: false,
       };
-    case 'READ_CONTACT_MESSAGE':
+    case 'MARK_MESSAGES_AS_READ':
       return {
         ...state,
         userContacts: state.userContacts.map(userContact => {
@@ -86,6 +91,12 @@ const chatReducer = (state, action) => {
             },
           };
         }),
+      };
+    case 'DELETE_MESSAGE':
+      return {
+        ...state,
+        messages: action.payload,
+        loading: false,
       };
     case 'CUE_FOR_DELETION':
       return {
@@ -103,17 +114,6 @@ const chatReducer = (state, action) => {
       return {
         ...state,
         queuedForDelete: [],
-      };
-    case 'DELETE_MESSAGE':
-      return {
-        ...state,
-        messages: action.payload,
-        loading: false,
-      };
-    case 'SET_SELECTED_CONTACT':
-      return {
-        ...state,
-        selectedContact: action.payload,
       };
     default:
       return state;
