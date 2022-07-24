@@ -4,7 +4,7 @@ import { readContactMessages } from '../context/ChatActions';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { fetchPreferedPic } from './utils/fetchPreferedPic';
 
-function Contact({ name, id, recentMessage, prefered_pic }) {
+function Contact({ name, id, recentMessage, preferedPic }) {
   const { state, dispatch } = useContext(ChatContext);
 
   const selectedContactId = state?.selectedContact;
@@ -23,7 +23,7 @@ function Contact({ name, id, recentMessage, prefered_pic }) {
       }}
     >
       <img
-        src={fetchPreferedPic(prefered_pic)}
+        src={fetchPreferedPic(preferedPic)}
         alt="profile pic"
         className="rounded-full w-8 h-8 object-cover border-2 border-slate-300 border-opacity-50 mr-4"
       />

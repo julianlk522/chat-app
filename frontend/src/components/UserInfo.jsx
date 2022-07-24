@@ -97,6 +97,7 @@ function UserInfo() {
             e.preventDefault();
             dispatch({ type: 'LOGOUT_USER' });
             localStorage.removeItem('chatUser');
+            window.google?.accounts?.id?.disableAutoSelect();
             navigate('/auth');
           }}
         >

@@ -5,9 +5,8 @@ import { useSelectedContactInfo } from '../hooks/useSelectedContactInfo';
 import { toast } from 'react-toastify';
 import { FiEdit2, FiCheckCircle } from 'react-icons/fi';
 import genericPic from '../assets/genericPic.jpg';
-import crazyGuyPic from '../assets/crazyGuyPic.jpg';
-import trexPic from '../assets/trexPic.jpg';
 import gorfPic from '../assets/gorfPic.jpg';
+import { fetchPreferedPic } from './utils/fetchPreferedPic';
 
 function ContactInfo() {
   const toastOptions = {
@@ -60,15 +59,7 @@ function ContactInfo() {
     <div id="contactInfo" className="w-1/4 p-4 flex flex-col">
       <div id="picArea" className="flex flex-col items-center">
         <img
-          src={
-            selectedContactPreferedPic === 1
-              ? trexPic
-              : selectedContactPreferedPic === 2
-              ? gorfPic
-              : selectedContactPreferedPic === 3
-              ? crazyGuyPic
-              : genericPic
-          }
+          src={fetchPreferedPic(selectedContactPreferedPic)}
           alt="profile pic"
           className="rounded-full w-32 h-32 object-cover border-2 border-slate-300 border-opacity-50"
         />
@@ -176,14 +167,14 @@ function ContactInfo() {
           <hr className="bg-black h-1 opacity-5 rounded-2xl" />
           <div id="photos" className="py-4 flex justify-center overflow-hidden">
             <img
-              src={trexPic}
+              src={genericPic}
               alt="sent by contact"
-              className="w-[47.5%] object-contain mr-[5%]"
+              className="max-h-[6rem] max-w-[47.5%] object-contain mr-[5%]"
             />
             <img
               src={gorfPic}
               alt="sent by contact"
-              className="w-[47.5%] object-contain"
+              className="max-h-[6rem] max-w-[47.5%] object-contain"
             />
           </div>
         </div>

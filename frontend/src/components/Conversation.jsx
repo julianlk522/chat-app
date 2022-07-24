@@ -53,7 +53,7 @@ function Conversation() {
 
   useEffect(() => {
     const randomlyAssignOnlineStatus = () => {
-      //  if not an existing contact then return false
+      //  if not an existing contact then return false (offline)
       const selectedContactIsAnExistingContact = state.userContacts.some(
         userContact => userContact.user_id === selectedContactId
       );

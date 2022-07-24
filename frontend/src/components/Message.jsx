@@ -1,9 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
-import genericPic from '../assets/genericPic.jpg';
-import crazyGuyPic from '../assets/crazyGuyPic.jpg';
-import trexPic from '../assets/trexPic.jpg';
-import gorfPic from '../assets/gorfPic.jpg';
+import { fetchPreferedPic } from '../components/utils/fetchPreferedPic';
 
 function Message({
   messageId,
@@ -15,46 +12,22 @@ function Message({
   content,
   editMode,
 }) {
-  const [queuedForDelete, setQueuedForDelete] = useState(false);
-
   const { dispatch } = useContext(ChatContext);
 
-  //  refresh queuedForDelete when editMode changes
+  const [queuedForDelete, setQueuedForDelete] = useState(false);
+
   useEffect(() => {
     setQueuedForDelete(false);
   }, [editMode, selectedContactId]);
 
   return (
     <>
-      {senderId !== currentUserId ? (
-        //  not user's message
-        <div className="flex grow items-center">
-          <img
-            src={
-              selectedContactPreferedPic === 1
-                ? trexPic
-                : selectedContactPreferedPic === 2
-                ? gorfPic
-                : selectedContactPreferedPic === 3
-                ? crazyGuyPic
-                : genericPic
-            }
-            alt="profile pic"
-            className="rounded-full h-8 w-8 mx-4 object-cover"
-          />
-          <div className="p-4 my-4 mr-4 bg-slate-200 rounded-2xl break-words">
-            <p>{content}</p>
-          </div>
-        </div>
-      ) : (
-        //  user's message
+      {/* user's message */}
+      {senderId === currentUserId ? (
         <div
           className="flex justify-end items-center"
           onClick={() => {
-            if (!editMode) {
-              return;
-              //  toggle cue for deletion on click only if editMode enabled
-            } else {
+            if (editMode) {
               setQueuedForDelete(!queuedForDelete);
               if (!queuedForDelete) {
                 dispatch({ type: 'CUE_FOR_DELETION', payload: messageId });
@@ -64,11 +37,13 @@ function Message({
                   payload: messageId,
                 });
               }
+            } else {
+              return;
             }
           }}
         >
+          {/* deletion cue toggle button */}
           {editMode && (
-            //  deletion cue toggle button
             <div
               className={`h-4 w-4 ml-8 rounded-full ${
                 queuedForDelete ? 'bg-red-700' : 'border-2 border-slate-500'
@@ -80,18 +55,22 @@ function Message({
             <p>{content}</p>
           </div>
           <img
-            src={
-              currentUserPreferedPic === 1
-                ? trexPic
-                : currentUserPreferedPic === 2
-                ? gorfPic
-                : currentUserPreferedPic === 3
-                ? crazyGuyPic
-                : genericPic
-            }
+            src={fetchPreferedPic(currentUserPreferedPic)}
             alt="profile pic"
             className="rounded-full h-8 w-8 mx-4 object-cover"
           />
+        </div>
+      ) : (
+        //  contact's message
+        <div className="flex grow items-center">
+          <img
+            src={fetchPreferedPic(selectedContactPreferedPic)}
+            alt="profile pic"
+            className="rounded-full h-8 w-8 mx-4 object-cover"
+          />
+          <div className="p-4 my-4 mr-4 bg-slate-200 rounded-2xl break-words">
+            <p>{content}</p>
+          </div>
         </div>
       )}
     </>

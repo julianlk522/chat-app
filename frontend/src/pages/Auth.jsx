@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import ChatContext from '../context/ChatContext';
 import { createNewUser, loginUser } from '../context/ChatActions';
 import { useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
 import { toast } from 'react-toastify';
 import { FaArrowRight } from 'react-icons/fa';
 import { FcCancel } from 'react-icons/fc';
@@ -168,17 +169,18 @@ function Auth() {
                 <FcCancel fill="red" className="ml-4 w-8 h-8 rounded-full" />
               )}
             </button>
-            <button
-              type="button"
-              id="relocateButton"
-              className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
-              onClick={() => setIsSignUp(!isSignUp)}
-            >
-              <p className="text-slate-200 text-sm font-semibold m-2">
-                {`Take me to ${isSignUp ? 'Sign In' : 'Sign Up'} instead`}
-              </p>
-            </button>
+            <OAuth />
           </div>
+          <button
+            type="button"
+            id="relocateButton"
+            className="bg-white bg-opacity-10 rounded-2xl p-2 border-slate-200 border-2 border-opacity-25 hover:scale-110"
+            onClick={() => setIsSignUp(!isSignUp)}
+          >
+            <p className="text-slate-200 text-sm font-semibold m-2">
+              {`Take me to ${isSignUp ? 'Sign In' : 'Sign Up'} instead`}
+            </p>
+          </button>
         </form>
       </div>
     </>

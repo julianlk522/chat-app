@@ -40,10 +40,10 @@ function MyChats() {
     setReadyToInputNewContacts(false);
   }, [state.userContacts]);
 
-  // scroll contacts list to the top when the messages state changes
+  // scroll contacts list to the top when a userContact is added or removed
   useEffect(() => {
     scrollRef.current.scrollIntoView(false);
-  }, [state.messages]);
+  }, [state.userContacts.length]);
 
   return (
     <div
@@ -123,7 +123,7 @@ function MyChats() {
                     name={contact.name}
                     id={contact.user_id}
                     recentMessage={contact.recentMessage}
-                    prefered_pic={contact.prefered_pic}
+                    preferedPic={contact.prefered_pic}
                   />
                 );
               }
